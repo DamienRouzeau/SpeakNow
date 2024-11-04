@@ -142,4 +142,9 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             isRunning = false;
         }
     }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        
+    }
 }

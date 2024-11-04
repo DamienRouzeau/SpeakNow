@@ -8,7 +8,7 @@ public class CameraFreeLook : MonoBehaviour
     public float minDistanceFromPlayer = 2f; // Distance minimale de la caméra par rapport au joueur
     public float cameraHeight = 3f; // Hauteur de la caméra par rapport au joueur (tu peux l'augmenter)
     public LayerMask collisionLayers; // Les couches avec lesquelles la caméra peut entrer en collision (maison, props, etc.)
-    
+
     private float rotationX = 0f;
     private float rotationY = 0f;
     public float minVerticalAngle = -15f;
@@ -36,10 +36,13 @@ public class CameraFreeLook : MonoBehaviour
 
         // Lancer un raycast entre le joueur et la caméra pour détecter les collisions
         RaycastHit hit;
-        if (Physics.Raycast(player.position, targetPosition - player.position, out hit, distanceFromPlayer, collisionLayers))
+        Vector3 rayOrigin = player.position + Vector3.up * 0.5f; // Décalage vertical pour éviter le sol
+        Vector3 rayDirection = targetPosition - rayOrigin;
+
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, distanceFromPlayer, collisionLayers))
         {
             // Ajuster la distance de la caméra pour éviter de pénétrer dans l'objet, mais ne pas descendre en dessous de minDistanceFromPlayer
-            float adjustedDistance = Mathf.Max(minDistanceFromPlayer, hit.distance - 0.2f); // Limite la distance minimale
+            float adjustedDistance = Mathf.Max(minDistanceFromPlayer, hit.distance - 0.2f);
             targetPosition = player.position + (hit.point - player.position).normalized * adjustedDistance;
         }
 
