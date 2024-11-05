@@ -1532,7 +1532,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 426263144}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1541,7 +1541,7 @@ RectTransform:
   - {fileID: 441349110}
   - {fileID: 444640099}
   m_Father: {fileID: 1077372214}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -2605,6 +2605,7 @@ MonoBehaviour:
   rotationSpeed: 720
   jumpForce: 1
   cameraTransform: {fileID: 417709038}
+  camera: {fileID: 417709039}
   animator: {fileID: 830290970}
 --- !u!54 &830290972
 Rigidbody:
@@ -3838,13 +3839,14 @@ GameObject:
   - component: {fileID: 1077372213}
   - component: {fileID: 1077372212}
   - component: {fileID: 1077372211}
+  - component: {fileID: 1077372215}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1077372211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3928,6 +3930,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 1.62}
   m_SizeDelta: {x: 2, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1077372215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077372210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c19bd7562d278d84aafec9e362d117f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camera: {fileID: 417709037}
 --- !u!4 &1112141152 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9190681272309813207, guid: 09ef8aaf7eb74a847add702e1e143d0a, type: 3}
@@ -16748,6 +16763,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 1077372210}
+  dialogueZoom: 3
+  dialogueDuration: 1.5
+  animator: {fileID: 1770121573}
 --- !u!4 &2143262916 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9190681272309813207, guid: 09ef8aaf7eb74a847add702e1e143d0a, type: 3}

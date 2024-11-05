@@ -2,13 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dialogue : MonoBehaviour
+public class DialogueManager : MonoBehaviour
 {
     private Transform startTransform;
     private GameObject player;
     private InteractionManager interactionManager;
     [SerializeField]
     private GameObject canvas;
+    [SerializeField]
+    private float dialogueZoom;
+    [SerializeField]
+    private float dialogueDuration;
+    [SerializeField]
+    private Animator animator;
 
     private void Start()
     {
@@ -25,10 +31,10 @@ public class Dialogue : MonoBehaviour
             transform.position.y,
             player.transform.position.z
             );
-        
+        animator.SetBool("talk", true);
         transform.LookAt(targetPosition);
         canvas.SetActive(true);
-
+        // activer le bruit de talk ici
     }
 
     private void OnTriggerEnter(Collider other)
@@ -48,6 +54,7 @@ public class Dialogue : MonoBehaviour
             interactionManager.Unsub(StartDialogue);
             player = null;
             canvas.SetActive(false);
+            animator.SetBool("talk", false);
         }
     }
 }

@@ -4,7 +4,8 @@ public class CameraFreeLook : MonoBehaviour
 {
     public Transform player; // Le joueur à suivre
     public float mouseSensitivity = 100f; // Sensibilité de la souris
-    public float distanceFromPlayer = 5f; // Distance de la caméra par rapport au joueur
+    private float currentDistanceFromPlayer = 5f; // Distance de la caméra par rapport au joueur
+    public float distanceFromPlayer = 5f;
     public float minDistanceFromPlayer = 2f; // Distance minimale de la caméra par rapport au joueur
     public float cameraHeight = 3f; // Hauteur de la caméra par rapport au joueur (tu peux l'augmenter)
     public LayerMask collisionLayers; // Les couches avec lesquelles la caméra peut entrer en collision (maison, props, etc.)
@@ -18,6 +19,7 @@ public class CameraFreeLook : MonoBehaviour
     {
         // Verrouiller le curseur pour qu'il ne sorte pas de l'écran
         Cursor.lockState = CursorLockMode.Locked;
+        currentDistanceFromPlayer = distanceFromPlayer;
     }
 
     void LateUpdate()
@@ -29,7 +31,7 @@ public class CameraFreeLook : MonoBehaviour
 
         // Calculer la position et la rotation de la caméra
         Quaternion rotation = Quaternion.Euler(rotationY, rotationX, 0);
-        Vector3 offset = rotation * new Vector3(0, cameraHeight, -distanceFromPlayer);
+        Vector3 offset = rotation * new Vector3(0, cameraHeight, -currentDistanceFromPlayer);
 
         // Calculer la position souhaitée de la caméra sans collision
         Vector3 targetPosition = player.position + offset;
@@ -39,7 +41,7 @@ public class CameraFreeLook : MonoBehaviour
         Vector3 rayOrigin = player.position + Vector3.up * 0.5f; // Décalage vertical pour éviter le sol
         Vector3 rayDirection = targetPosition - rayOrigin;
 
-        if (Physics.Raycast(rayOrigin, rayDirection, out hit, distanceFromPlayer, collisionLayers))
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, currentDistanceFromPlayer, collisionLayers))
         {
             // Ajuster la distance de la caméra pour éviter de pénétrer dans l'objet, mais ne pas descendre en dessous de minDistanceFromPlayer
             float adjustedDistance = Mathf.Max(minDistanceFromPlayer, hit.distance - 0.2f);

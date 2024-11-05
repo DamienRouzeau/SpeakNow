@@ -9,6 +9,8 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     public float rotationSpeed = 720f;
     public float jumpForce = 7f;
     public Transform cameraTransform;
+    [SerializeField]
+    private CameraFreeLook camera;
     public Animator animator;
 
     private CharacterController characterController;
