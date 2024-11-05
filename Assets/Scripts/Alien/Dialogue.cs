@@ -7,30 +7,37 @@ public class Dialogue : MonoBehaviour
     private Transform startTransform;
     private GameObject player;
     private InteractionManager interactionManager;
+    [SerializeField]
+    private GameObject canvas;
 
     private void Start()
     {
         interactionManager = InteractionManager.instance;
         startTransform = transform;
+        canvas.SetActive(false);
     }
 
     private void StartDialogue()
     {
-        Debug.Log("Interact !!!!!!");
-        Quaternion _rotation = Quaternion.LookRotation(player.transform.position - transform.position);
-        _rotation.x = transform.rotation.x;
-        _rotation.z = transform.rotation.z;
-        _rotation.w = transform.rotation.w;
-        transform.rotation = _rotation;
+        Vector3 targetPosition = new Vector3
+            (
+            player.transform.position.x,
+            transform.position.y,
+            player.transform.position.z
+            );
+        
+        transform.LookAt(targetPosition);
+        canvas.SetActive(true);
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("InteractionArea"))
         {
-            Debug.Log("Enter");
             interactionManager.Sub(StartDialogue);
-            player = other.gameObject;
+            Debug.Log(other.gameObject.name);
+            player = other.gameObject.transform.parent.gameObject;
         }
     }
 
@@ -38,9 +45,9 @@ public class Dialogue : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            Debug.Log("Exit");
             interactionManager.Unsub(StartDialogue);
             player = null;
+            canvas.SetActive(false);
         }
     }
 }

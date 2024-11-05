@@ -5,8 +5,8 @@ using UnityEngine.Events;
 
 public class InteractionManager : MonoBehaviour
 {
-    private UnityEvent interact;
-    private List<UnityAction> subscribers;
+    private UnityEvent interact = new UnityEvent();
+    private List<UnityAction> subscribers = new List<UnityAction>();
     private static InteractionManager Instance { get; set; }
     public static InteractionManager instance => Instance;
 
@@ -27,7 +27,6 @@ public class InteractionManager : MonoBehaviour
     public void Sub(UnityAction _action)
     {
         interact.AddListener(_action);
-        Debug.Log("AAAAAAAAAA");
         subscribers.Add(_action);
     }
 
@@ -39,7 +38,6 @@ public class InteractionManager : MonoBehaviour
 
     public void Interact()
     {
-        Debug.Log("Interact");
         interact.Invoke();
     }
 }

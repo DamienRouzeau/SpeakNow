@@ -145,6 +145,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        
+        InteractionManager.instance.Interact();
     }
 }
