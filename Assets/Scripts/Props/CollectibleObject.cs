@@ -17,6 +17,15 @@ public class CollectibleObject : MonoBehaviour
         interactionManager = InteractionManager.instance;
     }
 
+    public void FixedUpdate()
+    {
+        if (transform.position.y < -10)
+        {
+            rb.velocity = Vector3.zero;
+            transform.position = new Vector3(transform.position.x, 2, transform.position.z);
+        }
+    }
+
     public string GetItemName()
     {
         return itemName;

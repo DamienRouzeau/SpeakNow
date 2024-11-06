@@ -1312,7 +1312,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4586654444378030, guid: 5b6062007637241e0b729ae8d458864b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.18807428
+      value: 0.291
       objectReference: {fileID: 0}
     - target: {fileID: 4586654444378030, guid: 5b6062007637241e0b729ae8d458864b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -16236,14 +16236,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 954568163827832127, guid: 9a3993330101fc9448997643611d6a92, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 2377354807190315747, guid: 9a3993330101fc9448997643611d6a92, type: 3}
       propertyPath: m_Name
       value: Alien
+      objectReference: {fileID: 0}
+    - target: {fileID: 4133937039610740030, guid: 9a3993330101fc9448997643611d6a92, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4725292834453710609, guid: 9a3993330101fc9448997643611d6a92, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 417709041}
+    - target: {fileID: 7545400728073103102, guid: 9a3993330101fc9448997643611d6a92, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7545400728073103102, guid: 9a3993330101fc9448997643611d6a92, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.0069856644
