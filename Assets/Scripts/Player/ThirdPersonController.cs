@@ -72,9 +72,13 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
                 Quaternion targetRotation = Quaternion.LookRotation(move);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
-            else
+            if (!isRunning || movementInput == Vector2.zero)
             {
                 walkParticle.Stop();
+            }
+            else if(!walkParticle.isPlaying)
+            {
+                walkParticle.Play();
             }
         }
 
@@ -101,7 +105,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     public void OnMove(InputAction.CallbackContext context)
     {
         movementInput = context.ReadValue<Vector2>();
-        walkParticle.Play();
     }
 
     // Callback pour capturer l'input de la caméra
@@ -133,24 +136,16 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     // Callback pour activer/désactiver la course
     public void OnRun(InputAction.CallbackContext context)
     {
-        isRunning = context.performed;        
+        isRunning = context.performed;
+        walkParticle.Play();
     }
 
     // Callback pour l'interaction avec les portes
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if(context.performed)
+        if (context.performed)
         {
             InteractionManager.instance.Interact();
         }
-        
-        //if (context.performed && doorController != null)
-        //{
-        //    doorController.ToggleDoor();
-        //}
-        //else if (doorController == null)
-        //{
-        //    Debug.LogWarning("DoorController is not assigned in ThirdPersonController.");
-        //}
     }
 }
