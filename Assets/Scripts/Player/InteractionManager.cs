@@ -10,6 +10,8 @@ public class InteractionManager : MonoBehaviour
     public List<GameObject> interactibleObjects;
     private static InteractionManager Instance { get; set; }
     public static InteractionManager instance => Instance;
+    [SerializeField]
+    private float highlightWidht = 5;
 
     private void Awake()
     {
@@ -40,6 +42,12 @@ public class InteractionManager : MonoBehaviour
 
     public void Unsub(UnityAction _action, GameObject _interactibleInRange)
     {
+        if (_interactibleInRange.CompareTag("Highlightable"))
+        {
+            Outline _outlineToDisable = _interactibleInRange.GetComponent<Outline>();
+            _outlineToDisable.outlineWidth = 0;
+            _outlineToDisable.UpdateMaterialProperties();
+        }
         interact.RemoveListener(_action);
         subscribers.Remove(_action);
         interactibleObjects.Remove(_interactibleInRange);
@@ -78,6 +86,34 @@ public class InteractionManager : MonoBehaviour
         else
         {
             interact.Invoke();
+        }
+    }
+
+
+    public void HighlightClosest()
+    {
+        int idClosestObject = 0;
+        float closestDistance = Vector3.Distance(interactibleObjects[0].transform.position, transform.position);
+        foreach (GameObject obj in interactibleObjects)
+        {
+            float tryDistance = Vector3.Distance(obj.transform.position, transform.position);
+            if (tryDistance < closestDistance)
+            {
+                closestDistance = tryDistance;
+                idClosestObject = interactibleObjects.IndexOf(obj);
+                if (interactibleObjects[idClosestObject].CompareTag("Highlightable"))
+                {
+                    Outline _outlineToActive = interactibleObjects[idClosestObject].GetComponent<Outline>();
+                    _outlineToActive.outlineWidth = 0;
+                    _outlineToActive.UpdateMaterialProperties();
+                }
+            }
+        }
+        if(interactibleObjects[idClosestObject].CompareTag("Highlightable"))
+        {
+            Outline _outlineToActive = interactibleObjects[idClosestObject].GetComponent<Outline>();
+            _outlineToActive.outlineWidth = highlightWidht;
+            _outlineToActive.UpdateMaterialProperties();
         }
     }
 }

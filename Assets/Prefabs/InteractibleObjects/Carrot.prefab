@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Carrot
       objectReference: {fileID: 0}
+    - target: {fileID: 1694223022736750, guid: 1584bf8616f7df14caf48f037ed2c62b, type: 3}
+      propertyPath: m_TagString
+      value: Highlightable
+      objectReference: {fileID: 0}
     - target: {fileID: 4046469110218682, guid: 1584bf8616f7df14caf48f037ed2c62b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -61,6 +65,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1694223022736750, guid: 1584bf8616f7df14caf48f037ed2c62b, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 1842443992976229439}
+    - targetCorrespondingSourceObject: {fileID: 1694223022736750, guid: 1584bf8616f7df14caf48f037ed2c62b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6181779557245055421}
     - targetCorrespondingSourceObject: {fileID: 1694223022736750, guid: 1584bf8616f7df14caf48f037ed2c62b, type: 3}
@@ -78,6 +85,24 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1694223022736750, guid: 1584bf8616f7df14caf48f037ed2c62b, type: 3}
   m_PrefabInstance: {fileID: 7318098163578232724}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1842443992976229439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7316413578476788474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 0, a: 1}
+  outlineWidth: 0
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!54 &6181779557245055421
 Rigidbody:
   m_ObjectHideFlags: 0

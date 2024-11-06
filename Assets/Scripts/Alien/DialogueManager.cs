@@ -84,6 +84,7 @@ public class DialogueManager : MonoBehaviour
 
     private void ResolveQuest()
     {
+        animator.SetBool("talk", false);
         animator.SetTrigger("QuestCompleted");
         switch (questName)
         {

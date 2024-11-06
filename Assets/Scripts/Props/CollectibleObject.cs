@@ -32,10 +32,10 @@ public class CollectibleObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("is kinematic : " + rb.isKinematic + " | collider : " + other.gameObject.name);
         if (other.CompareTag("InteractionArea") && rb.isKinematic == false)
         {
             interactionManager.Sub(Collect, this.gameObject);
+            interactionManager.HighlightClosest();
             player = other.gameObject.transform.parent.gameObject;
         }
     }
