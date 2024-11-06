@@ -10,7 +10,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     public float jumpForce = 7f;
     public Transform cameraTransform;
     [SerializeField]
-    private CameraFreeLook camera;
     public Animator animator;
     public DoorController doorController; // Référence au DoorController pour gérer les portes
 
@@ -134,6 +133,11 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     // Callback pour l'interaction avec les portes
     public void OnInteract(InputAction.CallbackContext context)
     {
+        if(context.performed)
+        {
+            InteractionManager.instance.Interact();
+        }
+        
         if (context.performed && doorController != null)
         {
             doorController.ToggleDoor();
