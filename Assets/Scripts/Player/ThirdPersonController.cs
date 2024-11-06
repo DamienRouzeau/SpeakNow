@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using static UnityEngine.ParticleSystem;
 
 public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerControlsActions
 {
@@ -21,6 +22,8 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private bool isJumping = false;
     private Vector3 velocity;
     private bool isGrounded;
+    [SerializeField]
+    private ParticleSystem walkParticle;
 
     void Awake()
     {
@@ -69,6 +72,10 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
                 Quaternion targetRotation = Quaternion.LookRotation(move);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
+            else
+            {
+                walkParticle.Stop();
+            }
         }
 
         // Applique la gravité
@@ -94,6 +101,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     public void OnMove(InputAction.CallbackContext context)
     {
         movementInput = context.ReadValue<Vector2>();
+        walkParticle.Play();
     }
 
     // Callback pour capturer l'input de la caméra
@@ -125,7 +133,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     // Callback pour activer/désactiver la course
     public void OnRun(InputAction.CallbackContext context)
     {
-        isRunning = context.performed;
+        isRunning = context.performed;        
     }
 
     // Callback pour l'interaction avec les portes
