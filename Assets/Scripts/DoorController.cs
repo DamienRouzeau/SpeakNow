@@ -6,7 +6,8 @@ public class DoorController : MonoBehaviour
     public Transform rightDoor;
     public float openAngle = 90f;
     public float openSpeed = 2f;
-
+    public Animator animatorRight;
+    public Animator animatorLeft;
     private bool isOpen = false;
     private Quaternion leftDoorClosedRotation;
     private Quaternion rightDoorClosedRotation;
@@ -31,5 +32,7 @@ public class DoorController : MonoBehaviour
     public void ToggleDoor()
     {
         isOpen = !isOpen;
+        animatorLeft.SetTrigger("Open");
+        animatorRight.SetTrigger("Open");
     }
 }

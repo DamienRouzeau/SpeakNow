@@ -52,6 +52,7 @@ MonoBehaviour:
   dialogueZoom: 3
   dialogueDuration: 1.5
   animator: {fileID: 8891183454640474011}
+  questName: 
 --- !u!54 &6633515384087987018
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -549,7 +550,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30

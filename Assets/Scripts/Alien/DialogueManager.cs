@@ -15,6 +15,9 @@ public class DialogueManager : MonoBehaviour
     private float dialogueDuration;
     [SerializeField]
     private Animator animator;
+    [SerializeField]
+    private string questName;
+    private InventorySystem inventory = InventorySystem.instance;
 
     private void Start()
     {
@@ -25,6 +28,11 @@ public class DialogueManager : MonoBehaviour
 
     private void StartDialogue()
     {
+        if(CheckQuest())
+        {
+            ResolveQuest();
+            return;
+        }
         Vector3 targetPosition = new Vector3
             (
             player.transform.position.x,
@@ -41,7 +49,7 @@ public class DialogueManager : MonoBehaviour
     {
         if(other.CompareTag("InteractionArea"))
         {
-            interactionManager.Sub(StartDialogue);
+            interactionManager.Sub(StartDialogue, this.gameObject);
             Debug.Log(other.gameObject.name);
             player = other.gameObject.transform.parent.gameObject;
         }
@@ -51,10 +59,38 @@ public class DialogueManager : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Unsub(StartDialogue);
+            interactionManager.Unsub(StartDialogue, this.gameObject);
             player = null;
             canvas.SetActive(false);
             animator.SetBool("talk", false);
+        }
+    }
+
+    private bool CheckQuest()
+    {
+        switch(questName)
+        {
+            case "CornQuest":
+                inventory = InventorySystem.instance;
+                if (inventory.itemInHand != null)
+                {
+                    if (inventory.itemInHand.itemName == "Corn") return true;
+                }
+                break;
+            default: return false;
+        }
+        return false;
+    }
+
+    private void ResolveQuest()
+    {
+        animator.SetTrigger("QuestCompleted");
+        switch (questName)
+        {
+            case "CornQuest":
+                CornQuest.instance.Resolve();
+                inventory.DestroyItemInHand();
+                break;
         }
     }
 }

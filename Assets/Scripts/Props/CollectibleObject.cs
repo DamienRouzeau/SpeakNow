@@ -6,8 +6,7 @@ public class CollectibleObject : MonoBehaviour
 {
     private InteractionManager interactionManager;
     private GameObject player;
-    [SerializeField]
-    private string itemName;
+    public string itemName;
     [SerializeField]
     private bool isStackable = false;
     public Rigidbody rb;
@@ -34,9 +33,9 @@ public class CollectibleObject : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("is kinematic : " + rb.isKinematic + " | collider : " + other.gameObject.name);
-        if (other.CompareTag("InteractionArea"))
+        if (other.CompareTag("InteractionArea") && rb.isKinematic == false)
         {
-            interactionManager.Sub(Collect);
+            interactionManager.Sub(Collect, this.gameObject);
             player = other.gameObject.transform.parent.gameObject;
         }
     }
@@ -45,14 +44,14 @@ public class CollectibleObject : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Unsub(Collect);
+            interactionManager.Unsub(Collect, this.gameObject);
             player = null;
         }
     }
 
     public void Collect()
     {
-        interactionManager.Unsub(Collect);
+        interactionManager.Unsub(Collect, this.gameObject);
 
         if (player != null)
         {
@@ -65,6 +64,7 @@ public class CollectibleObject : MonoBehaviour
             else
             {
                 inventory.AddItemInHand(this);
+                rb.useGravity = true;
             }
         }
     }

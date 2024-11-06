@@ -138,13 +138,13 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             InteractionManager.instance.Interact();
         }
         
-        if (context.performed && doorController != null)
-        {
-            doorController.ToggleDoor();
-        }
-        else if (doorController == null)
-        {
-            Debug.LogWarning("DoorController is not assigned in ThirdPersonController.");
-        }
+        //if (context.performed && doorController != null)
+        //{
+        //    doorController.ToggleDoor();
+        //}
+        //else if (doorController == null)
+        //{
+        //    Debug.LogWarning("DoorController is not assigned in ThirdPersonController.");
+        //}
     }
 }
