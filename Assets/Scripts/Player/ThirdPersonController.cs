@@ -143,12 +143,4 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             Debug.LogWarning("DoorController is not assigned in ThirdPersonController.");
         }
     }
-
-    public void OnInteract(InputAction.CallbackContext context)
-    {
-        if(context.performed)
-        {
-            InteractionManager.instance.Interact();
-        }
-    }
 }

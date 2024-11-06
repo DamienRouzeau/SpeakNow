@@ -66,11 +66,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
-<<<<<<< HEAD:Assets/Scripts/Player/PlayerInputActions.cs
                     ""id"": ""57eace76-d3d7-419b-8223-fed91081476b"",
-=======
-                    ""id"": ""dc774941-2c1a-4cd6-b255-f3fb01583efd"",
->>>>>>> Didacticiel:Assets/Scripts/PlayerInputActions.cs
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -168,11 +164,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-<<<<<<< HEAD:Assets/Scripts/Player/PlayerInputActions.cs
                     ""id"": ""f221a59c-8b2a-4739-8d7a-e6aee71475bb"",
-=======
-                    ""id"": ""6957fd3d-7755-4563-a3d1-4db70b647bcb"",
->>>>>>> Didacticiel:Assets/Scripts/PlayerInputActions.cs
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
