@@ -5,7 +5,7 @@ using UnityEngine;
 public class CanvasFacingCam : MonoBehaviour
 {
     [SerializeField]
-    private GameObject camera;
+    private new GameObject camera;
 
     private void FixedUpdate()
     {

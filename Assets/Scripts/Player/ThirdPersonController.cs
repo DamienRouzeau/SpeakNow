@@ -10,24 +10,21 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     public float jumpForce = 7f;
     public Transform cameraTransform;
     [SerializeField]
-    private CameraFreeLook camera;
     public Animator animator;
+    public DoorController doorController; // Référence au DoorController pour gérer les portes
 
     private CharacterController characterController;
     private PlayerInputActions inputActions;
     private Vector2 movementInput;
-    private Vector2 lookInput; // Variable pour capturer les mouvements de la caméra
+    private Vector2 lookInput;
     private bool isRunning;
     private bool isJumping = false;
-
     private Vector3 velocity;
     private bool isGrounded;
 
     void Awake()
     {
         characterController = GetComponent<CharacterController>();
-
-        // Initialisation du système d'input
         inputActions = new PlayerInputActions();
         inputActions.PlayerControls.SetCallbacks(this);
     }
@@ -99,10 +96,10 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         movementInput = context.ReadValue<Vector2>();
     }
 
-    // Implémentation de OnLook pour capturer l'input de la caméra
+    // Callback pour capturer l'input de la caméra
     public void OnLook(InputAction.CallbackContext context)
     {
-        lookInput = context.ReadValue<Vector2>(); // Capturer les mouvements de la caméra
+        lookInput = context.ReadValue<Vector2>();
     }
 
     // Callback pour le saut
@@ -110,11 +107,8 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     {
         if (context.performed && isGrounded)
         {
-            // Commencer immédiatement l'animation de saut
             isJumping = true;
             animator.SetBool("isJumping", true);
-
-            // Lancer la coroutine pour appliquer le saut après un délai
             StartCoroutine(ApplyJumpForce(0.7f));
         }
     }
@@ -123,11 +117,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private IEnumerator ApplyJumpForce(float delay)
     {
         yield return new WaitForSeconds(delay);
-
-        // Appliquer la force de saut
         velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
-
-        // Réinitialiser l'état du saut
         isJumping = false;
         animator.SetBool("isJumping", false);
     }
@@ -135,21 +125,24 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     // Callback pour activer/désactiver la course
     public void OnRun(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            isRunning = true;
-        }
-        else if (context.canceled)
-        {
-            isRunning = false;
-        }
+        isRunning = context.performed;
     }
 
+    // Callback pour l'interaction avec les portes
     public void OnInteract(InputAction.CallbackContext context)
     {
         if(context.performed)
         {
             InteractionManager.instance.Interact();
+        }
+        
+        if (context.performed && doorController != null)
+        {
+            doorController.ToggleDoor();
+        }
+        else if (doorController == null)
+        {
+            Debug.LogWarning("DoorController is not assigned in ThirdPersonController.");
         }
     }
 }
