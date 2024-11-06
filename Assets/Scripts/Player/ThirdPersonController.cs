@@ -25,8 +25,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     void Awake()
     {
         characterController = GetComponent<CharacterController>();
-
-        // Initialisation du système d'input
         inputActions = new PlayerInputActions();
         inputActions.PlayerControls.SetCallbacks(this);
     }
