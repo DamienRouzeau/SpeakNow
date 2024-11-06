@@ -1,5 +1,10 @@
 fileFormatVersion: 2
-guid: 6b33e2db255664c4ba9c9335e3d77f61
+<<<<<<<< HEAD:Assets/Scenes/DamienMainLevel 1.unity.meta
+guid: b9d0aec32165858479492f5af8114cb3
+========
+guid: ddf4a633f05a8cf44990025d4a30334a
+folderAsset: yes
+>>>>>>>> Prepush:Assets/Materials.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
