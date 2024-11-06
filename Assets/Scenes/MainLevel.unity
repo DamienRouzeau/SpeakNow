@@ -3138,7 +3138,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f84c48cda62c21946ab64f4fe099a63a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7ea36716346dcf74fa385a43b2264804, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14959,7 +14959,7 @@ PrefabInstance:
     - target: {fileID: 4618800910308162203, guid: 301e681fcc2f46845931a03419d58d09, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ca90e230f6293fb438aa09b3cd33596f, type: 2}
+      objectReference: {fileID: 2100000, guid: 15fef9290e5940b48a34b0e887bb40ed, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -30779,7 +30779,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f84c48cda62c21946ab64f4fe099a63a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0bbacddc3137ab14cb408b1cacd92b40, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -33254,7 +33254,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8955825322928242181, guid: 9a3993330101fc9448997643611d6a92, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.01
+      value: -3.414
       objectReference: {fileID: 0}
     - target: {fileID: 8955825322928242181, guid: 9a3993330101fc9448997643611d6a92, type: 3}
       propertyPath: m_LocalPosition.y
@@ -33262,7 +33262,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8955825322928242181, guid: 9a3993330101fc9448997643611d6a92, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -23.23
+      value: -22.74
       objectReference: {fileID: 0}
     - target: {fileID: 8955825322928242181, guid: 9a3993330101fc9448997643611d6a92, type: 3}
       propertyPath: m_LocalRotation.w
