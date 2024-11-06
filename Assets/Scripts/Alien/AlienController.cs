@@ -11,6 +11,8 @@ public class AlienController : MonoBehaviour
     private bool isKnockedOut = false;
     private bool isPursuing = false;
     private Animator animator;
+    private CharacterController characterController;
+    private bool isRagdoll = false;
 
     private Rigidbody[] ragdollRigidbodies;
     private Collider[] ragdollColliders;
@@ -34,19 +36,24 @@ public class AlienController : MonoBehaviour
         ToggleRagdoll(false);
     }
 
-    void ToggleRagdoll(bool state)
+    private void ToggleRagdoll(bool state)
     {
-        if (animator != null)
-            animator.enabled = !state;
-    
+        // Désactive l'animator et le CharacterController si on passe en mode ragdoll
+        if (animator != null) animator.enabled = !state;
+        if (characterController != null) characterController.enabled = !state;
+
+        // Active ou désactive les Rigidbody et Collider des membres
         foreach (Rigidbody rb in ragdollRigidbodies)
         {
-            if (rb != null) rb.isKinematic = !state;
+            if (rb != null) rb.isKinematic = !state; // Les rigidbodies doivent être non cinématiques en mode ragdoll
         }
+
         foreach (Collider col in ragdollColliders)
         {
-            if (col != null) col.enabled = state;
+            if (col != null && col != characterController) col.enabled = state;
         }
+
+        isRagdoll = state;
     }
 
     public void KnockOut()

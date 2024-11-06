@@ -24,18 +24,28 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private bool isGrounded;
     private bool isRagdoll = false; // Pour gérer l'état ragdoll
 
-    // Callback pour l'interaction avec les portes et le diamant
+    private Rigidbody[] ragdollRigidbodies;
+    private Collider[] ragdollColliders;
+
     void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
+
         if (characterController == null)
             Debug.LogError("CharacterController is not assigned.");
+        if (animator == null)
+            Debug.LogError("Animator is not assigned in ThirdPersonController.");
 
         inputActions = new PlayerInputActions();
         inputActions.PlayerControls.SetCallbacks(this);
 
-        if (animator == null)
-            Debug.LogError("Animator is not assigned in ThirdPersonController.");
+        // Obtenir tous les Rigidbody et Collider pour activer/désactiver le mode ragdoll
+        ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
+        ragdollColliders = GetComponentsInChildren<Collider>();
+
+        // Désactiver le mode ragdoll au démarrage
+        ToggleRagdoll(false);
     }
 
     void OnEnable()
@@ -99,26 +109,40 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         cameraTransform.Rotate(0, rotationX, 0, Space.World); // Rotation sur l'axe Y pour regarder autour
     }
 
-    // Fonction pour activer le mode ragdoll lors d'une attaque
+    private void ToggleRagdoll(bool state)
+    {
+        // Désactive l'Animator et le CharacterController si on passe en mode ragdoll
+        if (animator != null) animator.enabled = !state;
+        if (characterController != null) characterController.enabled = !state;
+
+        // Active ou désactive les Rigidbody et Collider des membres pour le mode ragdoll
+        foreach (Rigidbody rb in ragdollRigidbodies)
+        {
+            if (rb != null) rb.isKinematic = !state;
+        }
+
+        foreach (Collider col in ragdollColliders)
+        {
+            if (col != null && col != characterController) col.enabled = state;
+        }
+
+        isRagdoll = state;
+    }
+
     public void EnterRagdoll()
     {
         if (!isRagdoll)
         {
-            isRagdoll = true;
-            characterController.enabled = false; // Désactive CharacterController pendant le ragdoll
-            animator.enabled = false;
+            ToggleRagdoll(true);
             StartCoroutine(ExitRagdoll());
         }
     }
 
     private IEnumerator ExitRagdoll()
     {
-        yield return new WaitForSeconds(3f); // Temps en ragdoll
-        isRagdoll = false;
-        characterController.enabled = true; // Réactive le CharacterController après le ragdoll
-        animator.enabled = true;
+        yield return new WaitForSeconds(10f); // Temps en mode ragdoll
+        ToggleRagdoll(false);
     }
-
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -152,7 +176,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     {
         isRunning = context.performed;
     }
-
 
     public void OnInteract(InputAction.CallbackContext context)
     {
