@@ -4977,6 +4977,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &6008207057446003159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7093112003990188382}
+  m_Layer: 6
+  m_Name: ThrowPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7093112003990188382
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6008207057446003159}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 7, z: 1.7599987}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4130550421183332470}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8001451409031558181
 GameObject:
   m_ObjectHideFlags: 0
@@ -5329,6 +5360,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8c77a9742ed990640830b8be6f7695f5, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 7093112003990188382}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8c77a9742ed990640830b8be6f7695f5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3883472978534667138}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8c77a9742ed990640830b8be6f7695f5, type: 3}
@@ -5476,6 +5510,7 @@ MonoBehaviour:
   stackableInventory: []
   itemInHand: {fileID: 0}
   hand: {fileID: 2450418492491671746}
+  throwPosition: {fileID: 7093112003990188382}
   throwStrenght: 3
 --- !u!4 &4130550421183332470 stripped
 Transform:

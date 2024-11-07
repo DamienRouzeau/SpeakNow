@@ -10,9 +10,11 @@ public class CollectibleObject : MonoBehaviour
     [SerializeField]
     private bool isStackable = false;
     public Rigidbody rb;
+    public Collider collider;
 
     private void Start()
     {
+        collider = GetComponent<Collider>();
         interactionManager = InteractionManager.instance;
     }
 

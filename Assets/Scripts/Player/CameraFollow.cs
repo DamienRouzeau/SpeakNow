@@ -43,7 +43,7 @@ public class CameraFreeLook : MonoBehaviour
         if (Physics.Raycast(rayOrigin, rayDirection, out hit, distanceFromPlayer, collisionLayers))
         {
             // Ajuster la distance de la caméra pour éviter la pénétration
-            Debug.Log(hit.collider.gameObject.name);
+            //Debug.Log(hit.collider.gameObject.name);
             float adjustedDistance = Mathf.Max(minDistanceFromPlayer, hit.distance - 0.2f);
             targetPosition = player.position + (hit.point - player.position).normalized * adjustedDistance;
         }

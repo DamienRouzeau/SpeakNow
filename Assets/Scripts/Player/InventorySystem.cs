@@ -14,6 +14,8 @@ public class InventorySystem : MonoBehaviour
     [SerializeField]
     private GameObject hand;
     [SerializeField]
+    private Transform throwPosition;
+    [SerializeField]
     private float throwStrenght = 3;
 
     private void Awake()
@@ -29,6 +31,7 @@ public class InventorySystem : MonoBehaviour
             Instance = this;
         }
     }
+
 
     public void AddStackableItemToInventory(CollectibleObject item)
     {
@@ -59,6 +62,7 @@ public class InventorySystem : MonoBehaviour
             itemInHand = null;
             return;
         }
+        item.collider.enabled = false;
         item.transform.parent = hand.transform;
         itemInHand = item;
         item.transform.localPosition = Vector3.zero;
@@ -69,9 +73,13 @@ public class InventorySystem : MonoBehaviour
     {
         if (itemInHand != null)
         {
-            itemInHand.rb.isKinematic = false;
-            itemInHand.rb.AddForce(new Vector3(0, throwStrenght, 0) + transform.forward * throwStrenght, ForceMode.Impulse);
+            itemInHand.rb.isKinematic = false;            
             itemInHand.transform.parent = null;
+            itemInHand.transform.localPosition = throwPosition.position;
+            Debug.Log(itemInHand.transform.position + " | " + throwPosition.position);
+            itemInHand.rb.AddForce(new Vector3(0, throwStrenght, 0) + transform.forward * throwStrenght, ForceMode.Impulse);
+            itemInHand.collider.enabled = true;
+            
             itemInHand = null;
         }
     }

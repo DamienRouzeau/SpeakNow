@@ -44,6 +44,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
     void Update()
     {
+        Debug.Log("character position : " + transform.position);
         // Vérifier si le personnage est au sol
         isGrounded = characterController.isGrounded;
 

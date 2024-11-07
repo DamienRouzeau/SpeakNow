@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33966006180896330}
   - component: {fileID: 23924376140308776}
   - component: {fileID: 64812499228688646}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: terrain-plane-slope4
   m_TagString: Untagged
   m_Icon: {fileID: 0}

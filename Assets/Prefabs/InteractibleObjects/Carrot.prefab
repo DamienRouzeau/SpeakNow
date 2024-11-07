@@ -13,6 +13,10 @@ PrefabInstance:
       value: Carrot
       objectReference: {fileID: 0}
     - target: {fileID: 1694223022736750, guid: 1584bf8616f7df14caf48f037ed2c62b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1694223022736750, guid: 1584bf8616f7df14caf48f037ed2c62b, type: 3}
       propertyPath: m_TagString
       value: Highlightable
       objectReference: {fileID: 0}

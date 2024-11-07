@@ -7,6 +7,12 @@ public class testDebug : MonoBehaviour
     public Rigidbody rb;
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.name + " | " + rb.isKinematic);
+        //Debug.Log(collision.gameObject.name + " | " + rb.velocity);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //Log(other.gameObject.name + " | " + rb.velocity);
+
     }
 }
