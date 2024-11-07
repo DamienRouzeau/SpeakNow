@@ -38,10 +38,12 @@ public class CameraFreeLook : MonoBehaviour
         RaycastHit hit;
         Vector3 rayOrigin = player.position + Vector3.up * headHeightOffset; // Position à la hauteur de la tête
         Vector3 rayDirection = targetPosition - rayOrigin;
+        Debug.DrawLine(transform.position, player.transform.position, Color.red);
 
         if (Physics.Raycast(rayOrigin, rayDirection, out hit, distanceFromPlayer, collisionLayers))
         {
             // Ajuster la distance de la caméra pour éviter la pénétration
+            Debug.Log(hit.collider.gameObject.name);
             float adjustedDistance = Mathf.Max(minDistanceFromPlayer, hit.distance - 0.2f);
             targetPosition = player.position + (hit.point - player.position).normalized * adjustedDistance;
         }

@@ -5044,6 +5044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactibleObjects: []
+  highlightWidht: 5
 --- !u!1001 &4528387860591830941
 PrefabInstance:
   m_ObjectHideFlags: 0

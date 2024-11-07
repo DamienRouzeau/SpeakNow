@@ -40,6 +40,9 @@ public class CollectibleObject : MonoBehaviour
         }
     }
 
+
+
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("InteractionArea"))
