@@ -5019,6 +5019,7 @@ GameObject:
   - component: {fileID: 23059692414834405}
   - component: {fileID: 4493013778448896267}
   - component: {fileID: 8384099937160191272}
+  - component: {fileID: 4136434570842392300}
   m_Layer: 0
   m_Name: InteractArea
   m_TagString: InteractionArea
@@ -5058,7 +5059,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 10
   m_Center: {x: 0, y: 4.78, z: 0}
@@ -5076,6 +5077,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactibleObjects: []
   highlightWidht: 5
+--- !u!65 &4136434570842392300
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8001451409031558181}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10.158327, y: 14.103432, z: 6.1674633}
+  m_Center: {x: -0.040703215, y: 6.5517106, z: 2.583734}
 --- !u!1001 &4528387860591830941
 PrefabInstance:
   m_ObjectHideFlags: 0

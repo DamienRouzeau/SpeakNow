@@ -76,7 +76,6 @@ public class InventorySystem : MonoBehaviour
             itemInHand.rb.isKinematic = false;            
             itemInHand.transform.parent = null;
             itemInHand.transform.localPosition = throwPosition.position;
-            Debug.Log(itemInHand.transform.position + " | " + throwPosition.position);
             itemInHand.rb.AddForce(new Vector3(0, throwStrenght, 0) + transform.forward * throwStrenght, ForceMode.Impulse);
             itemInHand.collider.enabled = true;
             

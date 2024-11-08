@@ -53,13 +53,6 @@ public class InteractionManager : MonoBehaviour
         interactibleObjects.Remove(_interactibleInRange);
     }
 
-    //public void Unsub(int _index)
-    //{
-    //    if(subscribers.Count - 1 >= _index) interact.RemoveListener(subscribers[_index]);
-    //    if (subscribers.Count - 1 >= _index)  subscribers.Remove(subscribers[_index]);
-    //    if (interactibleObjects.Count - 1 >= _index)  interactibleObjects.Remove(interactibleObjects[_index]);
-    //}
-
     public void Interact()
     {
         if (interactibleObjects.Count > 1)
@@ -79,7 +72,11 @@ public class InteractionManager : MonoBehaviour
             subscribers[idClosestObject].Invoke();
             Unsub(subscribers[idClosestObject], interactibleObjects[idClosestObject]);
         }
-        else if(InventorySystem.instance.itemInHand != null && interactibleObjects.Count <= 0)
+        else if(interactibleObjects.Count == 1)
+        {
+            subscribers[0].Invoke();
+        }
+        else if (InventorySystem.instance.itemInHand != null && interactibleObjects.Count <= 0)
         {
             InventorySystem.instance.RemoveItemInHand();
         }
@@ -109,11 +106,12 @@ public class InteractionManager : MonoBehaviour
                 }
             }
         }
-        if(interactibleObjects[idClosestObject].CompareTag("Highlightable"))
+        if (interactibleObjects[idClosestObject].CompareTag("Highlightable"))
         {
             Outline _outlineToActive = interactibleObjects[idClosestObject].GetComponent<Outline>();
             _outlineToActive.outlineWidth = highlightWidht;
             _outlineToActive.UpdateMaterialProperties();
         }
+
     }
 }
