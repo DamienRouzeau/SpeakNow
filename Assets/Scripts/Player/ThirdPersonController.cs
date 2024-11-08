@@ -12,7 +12,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     [SerializeField]
     public Animator animator;
     public DoorController doorController; // Référence au DoorController pour gérer les portes
-    public GameObject diamond; // Référence au diamant
 
     private CharacterController characterController;
     private PlayerInputActions inputActions;
@@ -22,7 +21,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private bool isJumping = false;
     private Vector3 velocity;
     private bool isGrounded;
-    private bool isRagdoll = false; // Pour gérer l'état ragdoll
+    public bool isRagdoll = false; // Pour gérer l'état ragdoll
 
     private Rigidbody[] ragdollRigidbodies;
     private Collider[] ragdollColliders;
@@ -140,7 +139,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
     private IEnumerator ExitRagdoll()
     {
-        yield return new WaitForSeconds(10f); // Temps en mode ragdoll
+        yield return new WaitForSeconds(3f); // Temps en mode ragdoll
         ToggleRagdoll(false);
     }
 
@@ -189,28 +188,26 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             {
                 Debug.LogWarning("InteractionManager instance is missing.");
             }
-        }
 
-        if (context.performed && doorController != null)
-        {
-            doorController.ToggleDoor();
-        }
-        else if (context.performed && diamond != null && !isRagdoll)
-        {
-            AlienController alien = FindObjectOfType<AlienController>();
-            if (alien != null && !alien.IsKnockedOut())
+            if (context.performed && doorController != null)
             {
-                alien.StartPursuing();
+                doorController.ToggleDoor();
             }
-            else if (diamond != null)
+
+            // Vérifiez l'état de ragdoll
+            if (!isRagdoll) // Permet de collecter des objets seulement si le joueur n'est pas en ragdoll
             {
-                diamond.transform.parent = transform;
-                diamond.transform.localPosition = Vector3.zero;
+                // Logique pour permettre à l'alien de commencer à poursuivre si le joueur interagit
+                AlienController alien = FindObjectOfType<AlienController>();
+                if (alien != null && !alien.IsKnockedOut())
+                {
+                    alien.StartPursuing();
+                }
             }
-        }
-        else if (doorController == null)
-        {
-            Debug.LogWarning("DoorController is not assigned in ThirdPersonController.");
+            else
+            {
+                Debug.Log("Cannot collect items while in ragdoll.");
+            }
         }
     }
 }

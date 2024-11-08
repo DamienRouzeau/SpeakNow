@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CollectibleObject : MonoBehaviour
@@ -17,7 +15,7 @@ public class CollectibleObject : MonoBehaviour
         interactionManager = InteractionManager.instance;
     }
 
-    public void FixedUpdate()
+    private void FixedUpdate()
     {
         if (transform.position.y < -10)
         {
@@ -33,7 +31,6 @@ public class CollectibleObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("is kinematic : " + rb.isKinematic + " | collider : " + other.gameObject.name);
         if (other.CompareTag("InteractionArea"))
         {
             interactionManager.Sub(Collect);
@@ -52,19 +49,31 @@ public class CollectibleObject : MonoBehaviour
 
     public void Collect()
     {
-        interactionManager.Unsub(Collect);
-
         if (player != null)
         {
             InventorySystem inventory = player.GetComponent<InventorySystem>();
-            rb.isKinematic = true;
-            if (isStackable)
+            ThirdPersonController playerController = player.GetComponent<ThirdPersonController>();
+
+            // Vérifiez si le joueur n'est pas en ragdoll
+            if (inventory != null && !playerController.isRagdoll)
             {
-                inventory.AddStackableItemToInventory(this);
+                rb.isKinematic = true; // Rendre le collectible cinématique après la collecte
+
+                if (isStackable)
+                {
+                    inventory.AddStackableItemToInventory(this);
+                }
+                else
+                {
+                    inventory.AddItemInHand(this);
+                }
+
+                // Désactiver l'objet après la collecte
+                gameObject.SetActive(false);
             }
             else
             {
-                inventory.AddItemInHand(this);
+                Debug.Log("Cannot collect the item while in ragdoll.");
             }
         }
     }
