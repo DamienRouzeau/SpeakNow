@@ -9,6 +9,7 @@ public class NewBehaviourScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.gameObject.tag);
         if(other.CompareTag("Player"))
         {
             floor.SetActive(false);

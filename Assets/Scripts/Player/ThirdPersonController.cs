@@ -44,7 +44,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
     void Update()
     {
-        Debug.Log("character position : " + transform.position);
         // Vérifier si le personnage est au sol
         isGrounded = characterController.isGrounded;
 
@@ -72,15 +71,17 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             {
                 Quaternion targetRotation = Quaternion.LookRotation(move);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }
-            if (!isRunning || movementInput == Vector2.zero)
-            {
-                walkParticle.Stop();
-            }
-            else if(!walkParticle.isPlaying)
-            {
-                walkParticle.Play();
-            }
+            }    
+        }
+        Vector3 checkMove = new Vector3(movementInput.x, 0, movementInput.y);
+        float checkSpeed = isRunning ? runSpeed : walkSpeed;
+        if (!walkParticle.isEmitting && checkMove.magnitude * checkSpeed > 2.1f && isGrounded)
+        {
+            walkParticle.Play();
+        }
+        else if (checkMove.magnitude * checkSpeed < 2.1 || !isGrounded)
+        {
+            walkParticle.Stop();
         }
 
         // Applique la gravité
@@ -119,9 +120,13 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     {
         if (context.performed && isGrounded)
         {
+            if (!isJumping) animator.SetTrigger("Jump");
             isJumping = true;
-            animator.SetBool("isJumping", true);
-            StartCoroutine(ApplyJumpForce(0.7f));
+            //animator.SetBool("isJumping", true);
+            velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
+            isJumping = false;
+            //animator.SetBool("isJumping", false);
+            //StartCoroutine(ApplyJumpForce(0.7f));
         }
     }
 
