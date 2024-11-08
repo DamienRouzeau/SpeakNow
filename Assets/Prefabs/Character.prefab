@@ -5019,7 +5019,7 @@ GameObject:
   - component: {fileID: 23059692414834405}
   - component: {fileID: 4493013778448896267}
   - component: {fileID: 8384099937160191272}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: InteractArea
   m_TagString: InteractionArea
   m_Icon: {fileID: 0}
@@ -5446,7 +5446,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 3883472978534667138}
   animator: {fileID: 3855889085726722492}
   doorController: {fileID: 0}
-  walkParticle: {fileID: 0}
+  walkParticle: {fileID: 4165356991739792730}
 --- !u!95 &3855889085726722492
 Animator:
   serializedVersion: 5
