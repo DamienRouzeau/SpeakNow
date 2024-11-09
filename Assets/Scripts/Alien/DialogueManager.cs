@@ -59,7 +59,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Unsub(StartDialogue);
+            interactionManager.Unsub(StartDialogue, transform);
             player = null;
             canvas.SetActive(false);
             animator.SetBool("talk", false);

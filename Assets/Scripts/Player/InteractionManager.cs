@@ -8,13 +8,12 @@ public class InteractionManager : MonoBehaviour
     private static InteractionManager Instance { get; set; }
     public static InteractionManager instance => Instance;
     public Transform playerTransform;
-    
+
     [SerializeField]
     private float highlightWidth = 5;
 
-    // Ajout du champ interactibleObjects
-    public List<GameObject> interactibleObjects = new List<GameObject>(); 
-    
+    public List<GameObject> interactibleObjects = new List<GameObject>();
+
     private Transform lastHighlightedObject = null;
 
     private void Awake()
@@ -35,17 +34,31 @@ public class InteractionManager : MonoBehaviour
         {
             float distance = Vector3.Distance(playerTransform.position, interactableTransform.position);
             interactionQueue.Add((distance, action, interactableTransform));
-            Debug.Log($"Objet ajouté avec distance {distance}. Nombre total d'abonnés : {interactionQueue.Count}");
-
-            // Ajout de l'objet à la liste des objets interactifs
-            interactibleObjects.Add(interactableTransform.gameObject);
+            interactibleObjects.Add(interactableTransform.gameObject); 
+            Debug.Log($"Objet ajouté à l'interaction: {interactableTransform.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"Échec d'abonnement : Collider manquant ou désactivé sur {interactableTransform?.name}");
         }
     }
 
-    public void Unsub(UnityAction action)
+    public void Unsub(UnityAction action, Transform interactableTransform)
     {
         interactionQueue.RemoveAll(item => item.action == action);
-        Debug.Log("Objet supprimé de l'interaction. Nombre total d'abonnés : " + interactionQueue.Count);
+        interactibleObjects.Remove(interactableTransform.gameObject);
+        Debug.Log($"Objet désabonné de l'interaction : {interactableTransform.name}");
+
+        if (lastHighlightedObject == interactableTransform)
+        {
+            Outline outlineToDisable = interactableTransform.GetComponent<Outline>();
+            if (outlineToDisable != null)
+            {
+                outlineToDisable.outlineWidth = 0;
+                outlineToDisable.UpdateMaterialProperties();
+            }
+            lastHighlightedObject = null;
+        }
     }
 
     public void Interact()
@@ -55,7 +68,7 @@ public class InteractionManager : MonoBehaviour
             interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
             var closestAction = interactionQueue[0].action;
             closestAction.Invoke();
-            Debug.Log("Interaction exécutée pour l'objet le plus proche.");
+            Debug.Log("Interagissant avec l'objet le plus proche.");
         }
     }
 
@@ -69,7 +82,7 @@ public class InteractionManager : MonoBehaviour
 
             if (item.interactableTransform == null)
             {
-                interactionQueue.RemoveAt(i); // Supprime l'entrée si l'objet a été détruit
+                interactionQueue.RemoveAt(i);
                 continue;
             }
 
@@ -82,7 +95,20 @@ public class InteractionManager : MonoBehaviour
 
     public void HighlightClosestObject()
     {
-        if (interactionQueue.Count == 0) return;
+        if (interactionQueue.Count == 0)
+        {
+            if (lastHighlightedObject != null)
+            {
+                Outline outlineToDisable = lastHighlightedObject.GetComponent<Outline>();
+                if (outlineToDisable != null)
+                {
+                    outlineToDisable.outlineWidth = 0;
+                    outlineToDisable.UpdateMaterialProperties();
+                }
+                lastHighlightedObject = null;
+            }
+            return;
+        }
 
         interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
         Transform closestObject = interactionQueue[0].interactableTransform;
@@ -102,6 +128,7 @@ public class InteractionManager : MonoBehaviour
         {
             outlineToEnable.outlineWidth = highlightWidth;
             outlineToEnable.UpdateMaterialProperties();
+            Debug.Log($"Highlight activé sur : {closestObject.name}");
         }
 
         lastHighlightedObject = closestObject;

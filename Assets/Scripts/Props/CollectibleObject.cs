@@ -33,10 +33,11 @@ public class CollectibleObject : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
+            Debug.Log($"{itemName} a détecté InteractionArea dans OnTriggerEnter");
             interactionManager = InteractionManager.instance;
             if (interactionManager != null)
             {
-                InteractionManager.instance.Sub(Collect, transform);             
+                interactionManager.Sub(Collect, transform);
                 Debug.Log($"{itemName} s'est abonné à l'événement d'interaction.");
                 player = other.gameObject.transform.parent.gameObject;
             }
@@ -53,12 +54,13 @@ public class CollectibleObject : MonoBehaviour
         {
             if (interactionManager != null)
             {
-                interactionManager.Unsub(Collect);
-                Debug.Log($"{itemName} s'est désabonné de l'événement d'interaction.");
+                Debug.Log($"{itemName} a quitté InteractionArea dans OnTriggerExit");
+                interactionManager.Unsub(Collect, transform);
             }
             player = null;
         }
     }
+
     public void Collect()
     {
         Debug.Log($"Tentative de collecte de : {itemName}");

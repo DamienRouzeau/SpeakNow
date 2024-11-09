@@ -72,7 +72,7 @@ public class AlienController : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea") && interactionManager != null)
         {
-            interactionManager.Unsub(KnockOut);
+            interactionManager.Unsub(KnockOut, transform);
             Debug.Log("Le joueur s'éloigne de l'alien - désabonné de l'interaction.");
         }
     }
