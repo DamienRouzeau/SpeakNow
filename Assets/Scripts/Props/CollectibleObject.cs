@@ -33,8 +33,17 @@ public class CollectibleObject : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Sub(Collect);
-            player = other.gameObject.transform.parent.gameObject;
+            interactionManager = InteractionManager.instance;
+            if (interactionManager != null)
+            {
+                InteractionManager.instance.Sub(Collect, 1);              
+                Debug.Log($"{itemName} s'est abonné à l'événement d'interaction.");
+                player = other.gameObject.transform.parent.gameObject;
+            }
+            else
+            {
+                Debug.LogError("InteractionManager instance is null in CollectibleObject.");
+            }
         }
     }
 
@@ -42,39 +51,64 @@ public class CollectibleObject : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Unsub(Collect);
+            if (interactionManager != null)
+            {
+                interactionManager.Unsub(Collect);
+                Debug.Log($"{itemName} s'est désabonné de l'événement d'interaction.");
+            }
             player = null;
         }
     }
-
     public void Collect()
     {
-        if (player != null)
+        Debug.Log($"Tentative de collecte de : {itemName}");
+
+        if (player == null)
         {
-            InventorySystem inventory = player.GetComponent<InventorySystem>();
-            ThirdPersonController playerController = player.GetComponent<ThirdPersonController>();
+            Debug.LogError("Le joueur n'est pas défini dans Collect(). Échec de la collecte pour : " + itemName);
+            return;
+        }
 
-            // Vérifiez si le joueur n'est pas en ragdoll
-            if (inventory != null && !playerController.isRagdoll)
+        ThirdPersonController playerController = player.GetComponent<ThirdPersonController>();
+
+        // Bloque seulement la collecte si le joueur est en ragdoll
+        if (playerController != null && playerController.isRagdoll)
+        {
+            Debug.Log("Impossible de collecter l'objet pendant le ragdoll.");
+            return; // Annule la collecte si en ragdoll
+        }
+
+        InventorySystem inventory = player.GetComponent<InventorySystem>();
+
+        if (inventory != null)
+        {
+            rb.isKinematic = true; // Rendre l'objet cinématique après la collecte
+
+            if (isStackable)
             {
-                rb.isKinematic = true; // Rendre le collectible cinématique après la collecte
-
-                if (isStackable)
-                {
-                    inventory.AddStackableItemToInventory(this);
-                }
-                else
-                {
-                    inventory.AddItemInHand(this);
-                }
-
-                // Désactiver l'objet après la collecte
-                gameObject.SetActive(false);
+                inventory.AddStackableItemToInventory(this);
+                gameObject.SetActive(false); // Désactive l'objet empilable
             }
             else
             {
-                Debug.Log("Cannot collect the item while in ragdoll.");
+                inventory.AddItemInHand(this);
+            }
+
+            // Déclenche la poursuite de l'alien uniquement si l'objet est le diamant
+            if (itemName == "Diamant")
+            {
+                AlienController alien = FindObjectOfType<AlienController>();
+                if (alien != null && !alien.IsKnockedOut())
+                {
+                    alien.StartPursuing();
+                    Debug.Log("L'alien commence la poursuite car le diamant a été collecté.");
+                }
             }
         }
+        else
+        {
+            Debug.LogError("InventorySystem non trouvé sur le joueur.");
+        }
     }
+
 }

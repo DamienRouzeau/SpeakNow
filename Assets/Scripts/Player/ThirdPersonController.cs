@@ -110,11 +110,9 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
     private void ToggleRagdoll(bool state)
     {
-        // Désactive l'Animator et le CharacterController si on passe en mode ragdoll
         if (animator != null) animator.enabled = !state;
         if (characterController != null) characterController.enabled = !state;
 
-        // Active ou désactive les Rigidbody et Collider des membres pour le mode ragdoll
         foreach (Rigidbody rb in ragdollRigidbodies)
         {
             if (rb != null) rb.isKinematic = !state;
@@ -122,12 +120,16 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
         foreach (Collider col in ragdollColliders)
         {
-            if (col != null && col != characterController) col.enabled = state;
+            // S'assurer de ne pas désactiver le Sphere Collider de InteractArea
+            if (col != null && col != characterController && col.gameObject.tag != "InteractionArea")
+            {
+                col.enabled = state;
+            }
         }
 
         isRagdoll = state;
     }
-
+    
     public void EnterRagdoll()
     {
         if (!isRagdoll)
@@ -192,21 +194,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             if (context.performed && doorController != null)
             {
                 doorController.ToggleDoor();
-            }
-
-            // Vérifiez l'état de ragdoll
-            if (!isRagdoll) // Permet de collecter des objets seulement si le joueur n'est pas en ragdoll
-            {
-                // Logique pour permettre à l'alien de commencer à poursuivre si le joueur interagit
-                AlienController alien = FindObjectOfType<AlienController>();
-                if (alien != null && !alien.IsKnockedOut())
-                {
-                    alien.StartPursuing();
-                }
-            }
-            else
-            {
-                Debug.Log("Cannot collect items while in ragdoll.");
             }
         }
     }

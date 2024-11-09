@@ -1,19 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class InteractionManager : MonoBehaviour
 {
-    private UnityEvent interact = new UnityEvent();
-    private List<UnityAction> subscribers = new List<UnityAction>();
+    private SortedList<int, UnityAction> interactionQueue = new SortedList<int, UnityAction>(); // Trie les interactions par priorité
     private static InteractionManager Instance { get; set; }
     public static InteractionManager instance => Instance;
 
     private void Awake()
     {
-        // If there is an instance, and it's not me, delete myself.
-
         if (Instance != null && Instance != this)
         {
             Destroy(this);
@@ -24,20 +20,38 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    public void Sub(UnityAction _action)
+    // Méthode pour s'abonner avec une priorité
+    public void Sub(UnityAction action, int priority)
     {
-        interact.AddListener(_action);
-        subscribers.Add(_action);
+        // Assurez-vous que chaque clé (priorité) est unique
+        while (interactionQueue.ContainsKey(priority)) priority++;
+        
+        interactionQueue.Add(priority, action);
+        Debug.Log($"Objet ajouté avec priorité {priority}. Nombre total d'abonnés : {interactionQueue.Count}");
     }
 
-    public void Unsub(UnityAction _action)
+    // Méthode pour se désabonner
+    public void Unsub(UnityAction action)
     {
-        interact.RemoveListener(_action);
-        subscribers.Remove(_action);
+        foreach (var key in interactionQueue.Keys)
+        {
+            if (interactionQueue[key] == action)
+            {
+                interactionQueue.Remove(key);
+                break;
+            }
+        }
+        Debug.Log("Objet supprimé de l'interaction. Nombre total d'abonnés : " + interactionQueue.Count);
     }
 
+    // Méthode pour invoquer l'interaction de priorité la plus élevée
     public void Interact()
     {
-        interact.Invoke();
+        if (interactionQueue.Count > 0)
+        {
+            var highestPriorityAction = interactionQueue.Values[0];
+            highestPriorityAction.Invoke();
+            Debug.Log("Interaction exécutée pour l'objet avec la plus haute priorité.");
+        }
     }
 }

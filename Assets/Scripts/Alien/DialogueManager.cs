@@ -41,7 +41,7 @@ public class DialogueManager : MonoBehaviour
     {
         if(other.CompareTag("InteractionArea"))
         {
-            interactionManager.Sub(StartDialogue);
+            interactionManager.Sub(StartDialogue, 2);
             Debug.Log(other.gameObject.name);
             player = other.gameObject.transform.parent.gameObject;
         }
