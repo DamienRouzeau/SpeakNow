@@ -50,8 +50,15 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         ToggleRagdoll(false);
     }
 
-    void OnEnable() => inputActions.PlayerControls.Enable();
-    void OnDisable() => inputActions.PlayerControls.Disable();
+    void OnEnable()
+    {
+        inputActions.PlayerControls.Enable();
+    }
+
+    void OnDisable()
+    {
+        inputActions.PlayerControls.Disable();
+    }
 
     void Update()
     {
@@ -149,9 +156,15 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         ToggleRagdoll(false);
     }
 
-    public void OnMove(InputAction.CallbackContext context) => movementInput = context.ReadValue<Vector2>();
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        movementInput = context.ReadValue<Vector2>();
+    }
 
-    public void OnLook(InputAction.CallbackContext context) => lookInput = context.ReadValue<Vector2>();
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        lookInput = context.ReadValue<Vector2>();
+    }
 
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -171,16 +184,23 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         animator.SetBool("isJumping", false);
     }
 
-    public void OnRun(InputAction.CallbackContext context) => isRunning = context.performed;
+    public void OnRun(InputAction.CallbackContext context)
+    {
+        isRunning = context.performed;
+    }
 
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
             if (InteractionManager.instance != null)
+            {
                 InteractionManager.instance.Interact();
+            }
             else
+            {
                 Debug.LogWarning("InteractionManager instance is missing.");
+            }
 
             // Vérifie si l'objet en main est un "maïs" avant d'ouvrir la porte
             if (doorController != null && inventorySystem.itemInHand != null && inventorySystem.itemInHand.GetItemName() == "Maïs")

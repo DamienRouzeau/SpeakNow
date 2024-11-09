@@ -25,6 +25,8 @@ public class AlienController : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("AlienController Start() appelé.");
+        
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         agent.enabled = false; // Désactiver l'agent au démarrage
@@ -41,6 +43,7 @@ public class AlienController : MonoBehaviour
 
     private void ToggleRagdoll(bool state)
     {
+        Debug.Log("ToggleRagdoll appelé avec état : " + state);
         if (animator != null) animator.enabled = !state;
 
         foreach (Rigidbody rb in ragdollRigidbodies)
@@ -81,46 +84,25 @@ public class AlienController : MonoBehaviour
     {
         if (!isKnockedOut)
         {
-            // Point de départ du Raycast, légèrement au-dessus du joueur
+            Debug.Log("KnockOut appelé - tentative de mise KO.");
             Vector3 rayStart = player.position + Vector3.up * 1.5f;
-            ThirdPersonController playerController = player.GetComponent<ThirdPersonController>();
-
-            // Viser le centre du corps de l'alien
-            Vector3 targetPoint = transform.position + Vector3.up * 1.0f; // Ajustez si nécessaire
+            Vector3 targetPoint = transform.position + Vector3.up * 1.0f;
             Vector3 directionToAlien = (targetPoint - rayStart).normalized;
             float distanceToAlien = Vector3.Distance(rayStart, targetPoint);
 
-        
-            // Afficher le Raycast en rouge pendant 5 secondes pour mieux le voir dans la scène
             Debug.DrawRay(rayStart, directionToAlien * distanceToAlien, Color.red, 60.0f);
 
-            if (playerController != null)
-            {
-                playerController.PunchAlien(); // Déclenche le coup de poing du joueur
-            }
-            // Lancer le Raycast pour vérifier si l'alien est bien dans la ligne de visée
             if (Physics.Raycast(rayStart, directionToAlien, out RaycastHit hit, distanceToAlien))
             {
                 if (hit.collider != null && hit.collider.gameObject == gameObject)
                 {
-                    // Vérification d'angle supplémentaire pour s'assurer que le joueur regarde vraiment vers l'alien
-                    Vector3 playerForward = player.forward;
-                    float angle = Vector3.Angle(playerForward, directionToAlien);
-
-                    // Si l'angle est inférieur à 45 degrés, alors l'alien est en face
+                    float angle = Vector3.Angle(player.forward, directionToAlien);
                     if (angle < 45.0f)
                     {
-                        // Déclencher le coup de poing uniquement si l'angle et le Raycast sont valides
-                        if (playerController != null)
-                        {
-                            playerController.PunchAlien(); // Déclenche le coup de poing du joueur
-                        }
-
-                        Debug.Log("KnockOut appelé - Alien va passer en mode KO.");
+                        Debug.Log("Alien touché et KO.");
                         isKnockedOut = true;
                         isPursuing = false;
                         isAttacking = false;
-
                         Invoke(nameof(ActivateRagdoll), 0.4f);
                     }
                     else
@@ -140,12 +122,12 @@ public class AlienController : MonoBehaviour
         }
     }
 
-
     private void ActivateRagdoll()
     {
+        Debug.Log("ActivateRagdoll appelé.");
         ToggleRagdoll(true);
         agent.enabled = false;
-        DropDiamond(); // Détache le diamant et le rend collectable
+        DropDiamond();
     }
 
     void Update()
@@ -165,6 +147,7 @@ public class AlienController : MonoBehaviour
 
         if (isPursuing && !isKnockedOut)
         {
+            Debug.Log("L'alien poursuit le joueur.");
             PursuePlayer();
             if (Vector3.Distance(transform.position, player.position) < attackRange && !isAttacking)
             {
@@ -177,10 +160,12 @@ public class AlienController : MonoBehaviour
     {
         if (!agent.enabled)
         {
+            Debug.Log("Activation de l'agent NavMesh.");
             agent.enabled = true;
             agent.speed = pursuitSpeed;
         }
 
+        Debug.Log("Mise à jour de la destination vers la position du joueur.");
         agent.SetDestination(player.position);
 
         animator.SetFloat("Speed", pursuitSpeed);
@@ -191,16 +176,13 @@ public class AlienController : MonoBehaviour
     {
         if (isAttacking) return;
 
+        Debug.Log("Alien attaque le joueur.");
         isAttacking = true;
-        agent.isStopped = true; // Arrêter le NavMeshAgent pendant l'attaque
+        agent.isStopped = true;
 
-        // Déclencher l'animation d'attaque
         animator.SetTrigger("AttackTrigger");
-
-        // Délai pour la fin de l'animation d'attaque avant de réactiver le mouvement
         Invoke(nameof(ResetAttack), 1.0f);
 
-        // Interagir avec le joueur
         ThirdPersonController playerController = player.GetComponent<ThirdPersonController>();
         if (playerController != null)
         {
@@ -224,6 +206,7 @@ public class AlienController : MonoBehaviour
 
     private void ResetAttack()
     {
+        Debug.Log("Réinitialisation de l'attaque.");
         isAttacking = false;
         agent.isStopped = false;
     }
@@ -234,6 +217,7 @@ public class AlienController : MonoBehaviour
 
         if (!hasDiamond && diamond.transform.parent == null)
         {
+            Debug.Log("L'alien cherche le diamant.");
             agent.enabled = true;
             agent.speed = returnSpeed;
             agent.SetDestination(diamond.transform.position);
@@ -261,6 +245,7 @@ public class AlienController : MonoBehaviour
     {
         if (handTransform != null)
         {
+            Debug.Log("Le diamant est attaché à la main de l'alien.");
             diamond.transform.parent = handTransform;
             diamond.transform.localPosition = Vector3.zero;
             diamond.transform.localRotation = Quaternion.identity;
@@ -269,19 +254,17 @@ public class AlienController : MonoBehaviour
             if (diamondRb != null) diamondRb.isKinematic = true;
 
             Collider diamondCollider = diamond.GetComponent<Collider>();
-            if (diamondCollider != null) diamondCollider.enabled = false; // Désactive l'interaction avec le diamant
+            if (diamondCollider != null) diamondCollider.enabled = false;
 
             hasDiamond = true;
-            Debug.Log("Le diamant est maintenant attaché solidement à la main de l'alien.");
         }
     }
-
-
 
     IEnumerator ReturnToOriginalPosition()
     {
         if (isKnockedOut) yield break;
 
+        Debug.Log("L'alien retourne à sa position d'origine.");
         agent.enabled = true;
         agent.speed = returnSpeed;
         agent.SetDestination(originalPosition.position);
@@ -305,6 +288,7 @@ public class AlienController : MonoBehaviour
     {
         if (diamond != null)
         {
+            Debug.Log("Le diamant est lâché.");
             diamond.transform.parent = null;
 
             Rigidbody diamondRb = diamond.GetComponent<Rigidbody>();
@@ -317,19 +301,18 @@ public class AlienController : MonoBehaviour
             Collider diamondCollider = diamond.GetComponent<Collider>();
             if (diamondCollider != null)
             {
-                diamondCollider.enabled = true; // Réactiver l'interaction avec le diamant
+                diamondCollider.enabled = true;
             }
 
             hasDiamond = false;
-            Debug.Log("Le diamant a été lâché et est désormais un collectible.");
         }
     }
-
 
     public void StartPursuing()
     {
         if (!isKnockedOut)
         {
+            Debug.Log("L'alien commence à poursuivre.");
             isPursuing = true;
         }
     }
