@@ -24,8 +24,8 @@ public class RecipientManager : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Sub(AddIngredient, this.gameObject);
-            interactionManager.HighlightClosest();
+            interactionManager.Sub(AddIngredient, transform);
+            interactionManager.HighlightClosestObject();
             player = other.gameObject.transform.parent.gameObject;
         }
     }
@@ -35,7 +35,7 @@ public class RecipientManager : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Unsub(AddIngredient, this.gameObject);
+            interactionManager.Unsub(AddIngredient);
             player = null;
         }
     }
@@ -45,7 +45,7 @@ public class RecipientManager : MonoBehaviour
         InventorySystem inventory = player.GetComponent<InventorySystem>();
         CollectibleObject ingredient = inventory.itemInHand;
         if (ingredient == null) return;
-        inventory.RemoveItemInHand();
+        // inventory.RemoveItemInHand();
         switch (ingredient.itemName)
         {
             case "Carrot":

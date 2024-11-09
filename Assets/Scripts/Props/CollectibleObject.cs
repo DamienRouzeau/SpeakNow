@@ -5,7 +5,7 @@ public class CollectibleObject : MonoBehaviour
     private InteractionManager interactionManager;
     private GameObject player;
     [SerializeField]
-    private string itemName;
+    public string itemName;
     [SerializeField]
     private bool isStackable = false;
     public Rigidbody rb;

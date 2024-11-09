@@ -11,7 +11,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     public Transform cameraTransform;
     [SerializeField]
     public Animator animator;
-    public DoorController doorController; // Référence au DoorController pour gérer les portes
+    public DoorController doorController;
 
     private CharacterController characterController;
     private PlayerInputActions inputActions;
@@ -21,57 +21,48 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private bool isJumping = false;
     private Vector3 velocity;
     private bool isGrounded;
-    public bool isRagdoll = false; // Pour gérer l'état ragdoll
-
+    public bool isRagdoll = false;
+    [SerializeField]
+    private ParticleSystem walkParticle;
     private Rigidbody[] ragdollRigidbodies;
     private Collider[] ragdollColliders;
+    private InventorySystem inventorySystem;
 
     void Awake()
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        inventorySystem = GetComponent<InventorySystem>(); // Récupère l'inventaire du joueur
 
         if (characterController == null)
             Debug.LogError("CharacterController is not assigned.");
         if (animator == null)
             Debug.LogError("Animator is not assigned in ThirdPersonController.");
+        if (inventorySystem == null)
+            Debug.LogError("InventorySystem is not assigned in ThirdPersonController.");
 
         inputActions = new PlayerInputActions();
         inputActions.PlayerControls.SetCallbacks(this);
 
-        // Obtenir tous les Rigidbody et Collider pour activer/désactiver le mode ragdoll
         ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
         ragdollColliders = GetComponentsInChildren<Collider>();
 
-        // Désactiver le mode ragdoll au démarrage
         ToggleRagdoll(false);
     }
 
-    void OnEnable()
-    {
-        inputActions.PlayerControls.Enable();
-    }
-
-    void OnDisable()
-    {
-        inputActions.PlayerControls.Disable();
-    }
+    void OnEnable() => inputActions.PlayerControls.Enable();
+    void OnDisable() => inputActions.PlayerControls.Disable();
 
     void Update()
     {
-        // Si en ragdoll, ignorer le mouvement
         if (isRagdoll) return;
 
-        // Vérifier si le personnage est au sol
         isGrounded = characterController.isGrounded;
         animator.SetBool("isJumping", isJumping);
 
         if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f; // Applique une petite force pour coller au sol
-        }
+            velocity.y = -2f;
 
-        // Gestion du mouvement
         if (!isJumping)
         {
             Vector3 move = new Vector3(movementInput.x, 0, movementInput.y);
@@ -80,7 +71,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             float currentSpeed = isRunning ? runSpeed : walkSpeed;
             characterController.Move(move * currentSpeed * Time.deltaTime);
 
-            // Mise à jour de la vitesse dans l'Animator
             animator.SetFloat("Speed", move.magnitude * currentSpeed);
 
             if (move.magnitude > 0.1f)
@@ -89,12 +79,20 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
         }
+        Vector3 checkMove = new Vector3(movementInput.x, 0, movementInput.y);
+        float checkSpeed = isRunning ? runSpeed : walkSpeed;
+        if (!walkParticle.isEmitting && checkMove.magnitude * checkSpeed > 2.1f && isGrounded)
+        {
+            walkParticle.Play();
+        }
+        else if (checkMove.magnitude * checkSpeed < 2.1 || !isGrounded)
+        {
+            walkParticle.Stop();
+        }
 
-        // Applique la gravité
         velocity.y += Physics.gravity.y * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
 
-        // Gérer la rotation de la caméra
         RotateCamera();
     }
 
@@ -103,19 +101,17 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         float rotationX = lookInput.x * rotationSpeed * Time.deltaTime;
         float rotationY = lookInput.y * rotationSpeed * Time.deltaTime;
 
-        // Appliquer la rotation verticale uniquement à la caméra
         cameraTransform.Rotate(-rotationY, 0, 0);
-        cameraTransform.Rotate(0, rotationX, 0, Space.World); // Rotation sur l'axe Y pour regarder autour
+        cameraTransform.Rotate(0, rotationX, 0, Space.World);
     }
     
     public void PunchAlien()
     {
         if (animator != null)
         {
-            animator.SetTrigger("AttackTrigger"); // Déclenche l'animation de coup de poing
+            animator.SetTrigger("AttackTrigger");
         }
     }
-
 
     private void ToggleRagdoll(bool state)
     {
@@ -129,7 +125,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
         foreach (Collider col in ragdollColliders)
         {
-            // S'assurer de ne pas désactiver le Sphere Collider de InteractArea
             if (col != null && col != characterController && col.gameObject.tag != "InteractionArea")
             {
                 col.enabled = state;
@@ -150,19 +145,13 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
     private IEnumerator ExitRagdoll()
     {
-        yield return new WaitForSeconds(3f); // Temps en mode ragdoll
+        yield return new WaitForSeconds(3f);
         ToggleRagdoll(false);
     }
 
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        movementInput = context.ReadValue<Vector2>();
-    }
+    public void OnMove(InputAction.CallbackContext context) => movementInput = context.ReadValue<Vector2>();
 
-    public void OnLook(InputAction.CallbackContext context)
-    {
-        lookInput = context.ReadValue<Vector2>();
-    }
+    public void OnLook(InputAction.CallbackContext context) => lookInput = context.ReadValue<Vector2>();
 
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -182,25 +171,19 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         animator.SetBool("isJumping", false);
     }
 
-    public void OnRun(InputAction.CallbackContext context)
-    {
-        isRunning = context.performed;
-    }
+    public void OnRun(InputAction.CallbackContext context) => isRunning = context.performed;
 
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
             if (InteractionManager.instance != null)
-            {
                 InteractionManager.instance.Interact();
-            }
             else
-            {
                 Debug.LogWarning("InteractionManager instance is missing.");
-            }
 
-            if (context.performed && doorController != null)
+            // Vérifie si l'objet en main est un "maïs" avant d'ouvrir la porte
+            if (doorController != null && inventorySystem.itemInHand != null && inventorySystem.itemInHand.GetItemName() == "Maïs")
             {
                 doorController.ToggleDoor();
             }

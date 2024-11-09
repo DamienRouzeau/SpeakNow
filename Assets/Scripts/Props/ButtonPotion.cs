@@ -11,7 +11,6 @@ public class ButtonPotion : MonoBehaviour
     [SerializeField]
     private Animator animator;
 
-
     private void Start()
     {
         interactionManager = InteractionManager.instance;
@@ -21,20 +20,18 @@ public class ButtonPotion : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Sub(CheckRecette, this.gameObject);
-            interactionManager.HighlightClosest();
+            interactionManager.Sub(CheckRecette, transform);
+            interactionManager.HighlightClosestObject();
             player = other.gameObject.transform.parent.gameObject;
         }
     }
-
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Unsub(CheckRecette, this.gameObject);
+            interactionManager.Unsub(CheckRecette);
             player = null;
-
         }
     }
 
