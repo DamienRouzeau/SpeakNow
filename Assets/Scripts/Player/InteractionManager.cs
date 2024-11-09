@@ -1,22 +1,16 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class InteractionManager : MonoBehaviour
 {
-    private UnityEvent interact = new UnityEvent();
-    private List<UnityAction> subscribers = new List<UnityAction>();
-    public List<GameObject> interactibleObjects;
+    private List<(float distance, UnityAction action, Transform interactableTransform)> interactionQueue = new List<(float, UnityAction, Transform)>();
     private static InteractionManager Instance { get; set; }
     public static InteractionManager instance => Instance;
-    [SerializeField]
-    private float highlightWidht = 5;
+    public Transform playerTransform; // Assurez-vous de l'assigner au joueur dans l'inspecteur.
 
     private void Awake()
     {
-        // If there is an instance, and it's not me, delete myself.
-
         if (Instance != null && Instance != this)
         {
             Destroy(this);
@@ -27,91 +21,48 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    public void Sub(UnityAction _action)
+    public void Sub(UnityAction action, Transform interactableTransform)
     {
-        interact.AddListener(_action);
-        subscribers.Add(_action);
-    }
-
-    public void Sub(UnityAction _action, GameObject _interactibleInRange)
-    {
-        interact.AddListener(_action);
-        subscribers.Add(_action);
-        interactibleObjects.Add(_interactibleInRange);
-    }
-
-    public void Unsub(UnityAction _action, GameObject _interactibleInRange)
-    {
-        if (_interactibleInRange.CompareTag("Highlightable"))
+        if (interactableTransform.GetComponent<Collider>().enabled) // Vérifie si l'interaction est possible
         {
-            Outline _outlineToDisable = _interactibleInRange.GetComponent<Outline>();
-            _outlineToDisable.outlineWidth = 0;
-            _outlineToDisable.UpdateMaterialProperties();
+            float distance = Vector3.Distance(playerTransform.position, interactableTransform.position);
+            interactionQueue.Add((distance, action, interactableTransform));
+            Debug.Log($"Objet ajouté avec distance {distance}. Nombre total d'abonnés : {interactionQueue.Count}");
         }
-        interact.RemoveListener(_action);
-        subscribers.Remove(_action);
-        interactibleObjects.Remove(_interactibleInRange);
     }
 
+
+    // Méthode pour se désabonner
+    public void Unsub(UnityAction action)
+    {
+        interactionQueue.RemoveAll(item => item.action == action);
+        Debug.Log("Objet supprimé de l'interaction. Nombre total d'abonnés : " + interactionQueue.Count);
+    }
+
+    // Méthode pour invoquer l'interaction la plus proche
     public void Interact()
     {
-        if (interactibleObjects.Count > 1)
+        if (interactionQueue.Count > 0)
         {
-            int idClosestObject = 0;
-            float closestDistance = Vector3.Distance(interactibleObjects[0].transform.position, transform.position);
+            // Trier par distance pour que l'objet le plus proche soit en premier
+            interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
 
-            foreach (GameObject obj in interactibleObjects)
-            {
-                float tryDistance = Vector3.Distance(obj.transform.position, transform.position);
-                if (tryDistance < closestDistance)
-                {
-                    closestDistance = tryDistance;
-                    idClosestObject = interactibleObjects.IndexOf(obj);
-                }
-            }
-            subscribers[idClosestObject].Invoke();
-            Unsub(subscribers[idClosestObject], interactibleObjects[idClosestObject]);
-        }
-        else if(interactibleObjects.Count == 1)
-        {
-            subscribers[0].Invoke();
-        }
-        else if (InventorySystem.instance.itemInHand != null && interactibleObjects.Count <= 0)
-        {
-            InventorySystem.instance.RemoveItemInHand();
-        }
-        else
-        {
-            interact.Invoke();
+            var closestAction = interactionQueue[0].action;
+            closestAction.Invoke();
+            Debug.Log("Interaction exécutée pour l'objet le plus proche.");
         }
     }
 
-
-    public void HighlightClosest()
+    // Mise à jour des distances pour chaque objet dans la file d'attente
+    private void Update()
     {
-        int idClosestObject = 0;
-        float closestDistance = Vector3.Distance(interactibleObjects[0].transform.position, transform.position);
-        foreach (GameObject obj in interactibleObjects)
-        {
-            float tryDistance = Vector3.Distance(obj.transform.position, transform.position);
-            if (tryDistance < closestDistance)
-            {
-                closestDistance = tryDistance;
-                idClosestObject = interactibleObjects.IndexOf(obj);
-                if (interactibleObjects[idClosestObject].CompareTag("Highlightable"))
-                {
-                    Outline _outlineToActive = interactibleObjects[idClosestObject].GetComponent<Outline>();
-                    _outlineToActive.outlineWidth = 0;
-                    _outlineToActive.UpdateMaterialProperties();
-                }
-            }
-        }
-        if (interactibleObjects[idClosestObject].CompareTag("Highlightable"))
-        {
-            Outline _outlineToActive = interactibleObjects[idClosestObject].GetComponent<Outline>();
-            _outlineToActive.outlineWidth = highlightWidht;
-            _outlineToActive.UpdateMaterialProperties();
-        }
+        if (playerTransform == null) return;
 
+        for (int i = 0; i < interactionQueue.Count; i++)
+        {
+            var item = interactionQueue[i];
+            float updatedDistance = Vector3.Distance(playerTransform.position, item.interactableTransform.position);
+            interactionQueue[i] = (updatedDistance, item.action, item.interactableTransform);
+        }
     }
 }

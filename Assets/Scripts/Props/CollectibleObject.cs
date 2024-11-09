@@ -1,24 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CollectibleObject : MonoBehaviour
 {
     private InteractionManager interactionManager;
     private GameObject player;
-    public string itemName;
+    [SerializeField]
+    private string itemName;
     [SerializeField]
     private bool isStackable = false;
     public Rigidbody rb;
-    public Collider collider;
 
     private void Start()
     {
-        collider = GetComponent<Collider>();
         interactionManager = InteractionManager.instance;
     }
 
-    public void FixedUpdate()
+    private void FixedUpdate()
     {
         if (transform.position.y < -10)
         {
@@ -34,43 +31,84 @@ public class CollectibleObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("InteractionArea") && rb.isKinematic == false)
+        if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Sub(Collect, this.gameObject);
-            interactionManager.HighlightClosest();
-            player = other.gameObject.transform.parent.gameObject;
+            interactionManager = InteractionManager.instance;
+            if (interactionManager != null)
+            {
+                InteractionManager.instance.Sub(Collect, transform);             
+                Debug.Log($"{itemName} s'est abonné à l'événement d'interaction.");
+                player = other.gameObject.transform.parent.gameObject;
+            }
+            else
+            {
+                Debug.LogError("InteractionManager instance is null in CollectibleObject.");
+            }
         }
     }
-
-
-
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Unsub(Collect, this.gameObject);
+            if (interactionManager != null)
+            {
+                interactionManager.Unsub(Collect);
+                Debug.Log($"{itemName} s'est désabonné de l'événement d'interaction.");
+            }
             player = null;
         }
     }
-
     public void Collect()
     {
-        interactionManager.Unsub(Collect, this.gameObject);
+        Debug.Log($"Tentative de collecte de : {itemName}");
 
-        if (player != null)
+        if (player == null)
         {
-            InventorySystem inventory = player.GetComponent<InventorySystem>();
-            rb.isKinematic = true;
+            Debug.LogError("Le joueur n'est pas défini dans Collect(). Échec de la collecte pour : " + itemName);
+            return;
+        }
+
+        ThirdPersonController playerController = player.GetComponent<ThirdPersonController>();
+
+        // Bloque seulement la collecte si le joueur est en ragdoll
+        if (playerController != null && playerController.isRagdoll)
+        {
+            Debug.Log("Impossible de collecter l'objet pendant le ragdoll.");
+            return; // Annule la collecte si en ragdoll
+        }
+
+        InventorySystem inventory = player.GetComponent<InventorySystem>();
+
+        if (inventory != null)
+        {
+            rb.isKinematic = true; // Rendre l'objet cinématique après la collecte
+
             if (isStackable)
             {
                 inventory.AddStackableItemToInventory(this);
+                gameObject.SetActive(false); // Désactive l'objet empilable
             }
             else
             {
                 inventory.AddItemInHand(this);
-                rb.useGravity = true;
+            }
+
+            // Déclenche la poursuite de l'alien uniquement si l'objet est le diamant
+            if (itemName == "Diamant")
+            {
+                AlienController alien = FindObjectOfType<AlienController>();
+                if (alien != null && !alien.IsKnockedOut())
+                {
+                    alien.StartPursuing();
+                    Debug.Log("L'alien commence la poursuite car le diamant a été collecté.");
+                }
             }
         }
+        else
+        {
+            Debug.LogError("InventorySystem non trouvé sur le joueur.");
+        }
     }
+
 }

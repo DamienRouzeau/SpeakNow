@@ -5,7 +5,6 @@ TagManager:
   serializedVersion: 2
   tags:
   - InteractionArea
-  - Highlightable
   layers:
   - Default
   - TransparentFX
@@ -16,10 +15,10 @@ TagManager:
   - Player
   - PlayerHand
   - CollectibleItems
-  - Fence
-  - EdgeOfMap
-  - Lighter
-  - NoItemCollision
+  - Alien
+  - 
+  - 
+  - 
   - 
   - 
   - 

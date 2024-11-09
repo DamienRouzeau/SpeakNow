@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
-using static UnityEngine.ParticleSystem;
 
 public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerControlsActions
 {
@@ -22,14 +21,30 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private bool isJumping = false;
     private Vector3 velocity;
     private bool isGrounded;
-    [SerializeField]
-    private ParticleSystem walkParticle;
+    public bool isRagdoll = false; // Pour gérer l'état ragdoll
+
+    private Rigidbody[] ragdollRigidbodies;
+    private Collider[] ragdollColliders;
 
     void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
+
+        if (characterController == null)
+            Debug.LogError("CharacterController is not assigned.");
+        if (animator == null)
+            Debug.LogError("Animator is not assigned in ThirdPersonController.");
+
         inputActions = new PlayerInputActions();
         inputActions.PlayerControls.SetCallbacks(this);
+
+        // Obtenir tous les Rigidbody et Collider pour activer/désactiver le mode ragdoll
+        ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
+        ragdollColliders = GetComponentsInChildren<Collider>();
+
+        // Désactiver le mode ragdoll au démarrage
+        ToggleRagdoll(false);
     }
 
     void OnEnable()
@@ -44,10 +59,11 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
     void Update()
     {
+        // Si en ragdoll, ignorer le mouvement
+        if (isRagdoll) return;
+
         // Vérifier si le personnage est au sol
         isGrounded = characterController.isGrounded;
-
-        // Mettre à jour le booléen isJumping dans l'Animator
         animator.SetBool("isJumping", isJumping);
 
         if (isGrounded && velocity.y < 0)
@@ -59,7 +75,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         if (!isJumping)
         {
             Vector3 move = new Vector3(movementInput.x, 0, movementInput.y);
-            move = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0) * move; // Oriente le mouvement selon la caméra
+            move = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0) * move;
 
             float currentSpeed = isRunning ? runSpeed : walkSpeed;
             characterController.Move(move * currentSpeed * Time.deltaTime);
@@ -71,66 +87,93 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             {
                 Quaternion targetRotation = Quaternion.LookRotation(move);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }    
-        }
-        Vector3 checkMove = new Vector3(movementInput.x, 0, movementInput.y);
-        float checkSpeed = isRunning ? runSpeed : walkSpeed;
-        if (!walkParticle.isEmitting && checkMove.magnitude * checkSpeed > 2.1f && isGrounded)
-        {
-            walkParticle.Play();
-        }
-        else if (checkMove.magnitude * checkSpeed < 2.1 || !isGrounded)
-        {
-            walkParticle.Stop();
+            }
         }
 
         // Applique la gravité
         velocity.y += Physics.gravity.y * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
 
-        // Gérer le mouvement de la caméra (sans affecter la rotation du personnage)
+        // Gérer la rotation de la caméra
         RotateCamera();
     }
 
-    // Gérer la rotation de la caméra
     void RotateCamera()
     {
         float rotationX = lookInput.x * rotationSpeed * Time.deltaTime;
         float rotationY = lookInput.y * rotationSpeed * Time.deltaTime;
 
-        // Appliquer la rotation verticale uniquement à la caméra (et non au personnage)
+        // Appliquer la rotation verticale uniquement à la caméra
         cameraTransform.Rotate(-rotationY, 0, 0);
         cameraTransform.Rotate(0, rotationX, 0, Space.World); // Rotation sur l'axe Y pour regarder autour
     }
+    
+    public void PunchAlien()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("AttackTrigger"); // Déclenche l'animation de coup de poing
+        }
+    }
 
-    // Callback pour le mouvement
+
+    private void ToggleRagdoll(bool state)
+    {
+        if (animator != null) animator.enabled = !state;
+        if (characterController != null) characterController.enabled = !state;
+
+        foreach (Rigidbody rb in ragdollRigidbodies)
+        {
+            if (rb != null) rb.isKinematic = !state;
+        }
+
+        foreach (Collider col in ragdollColliders)
+        {
+            // S'assurer de ne pas désactiver le Sphere Collider de InteractArea
+            if (col != null && col != characterController && col.gameObject.tag != "InteractionArea")
+            {
+                col.enabled = state;
+            }
+        }
+
+        isRagdoll = state;
+    }
+    
+    public void EnterRagdoll()
+    {
+        if (!isRagdoll)
+        {
+            ToggleRagdoll(true);
+            StartCoroutine(ExitRagdoll());
+        }
+    }
+
+    private IEnumerator ExitRagdoll()
+    {
+        yield return new WaitForSeconds(3f); // Temps en mode ragdoll
+        ToggleRagdoll(false);
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         movementInput = context.ReadValue<Vector2>();
     }
 
-    // Callback pour capturer l'input de la caméra
     public void OnLook(InputAction.CallbackContext context)
     {
         lookInput = context.ReadValue<Vector2>();
     }
 
-    // Callback pour le saut
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.performed && isGrounded)
         {
-            if (!isJumping) animator.SetTrigger("Jump");
             isJumping = true;
-            //animator.SetBool("isJumping", true);
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
-            isJumping = false;
-            //animator.SetBool("isJumping", false);
-            //StartCoroutine(ApplyJumpForce(0.7f));
+            animator.SetBool("isJumping", true);
+            StartCoroutine(ApplyJumpForce(0.7f));
         }
     }
 
-    // Coroutine pour appliquer la force de saut après un délai
     private IEnumerator ApplyJumpForce(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -139,19 +182,28 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         animator.SetBool("isJumping", false);
     }
 
-    // Callback pour activer/désactiver la course
     public void OnRun(InputAction.CallbackContext context)
     {
         isRunning = context.performed;
-        walkParticle.Play();
     }
 
-    // Callback pour l'interaction avec les portes
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            InteractionManager.instance.Interact();
+            if (InteractionManager.instance != null)
+            {
+                InteractionManager.instance.Interact();
+            }
+            else
+            {
+                Debug.LogWarning("InteractionManager instance is missing.");
+            }
+
+            if (context.performed && doorController != null)
+            {
+                doorController.ToggleDoor();
+            }
         }
     }
 }
