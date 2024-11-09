@@ -107,6 +107,15 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         cameraTransform.Rotate(-rotationY, 0, 0);
         cameraTransform.Rotate(0, rotationX, 0, Space.World); // Rotation sur l'axe Y pour regarder autour
     }
+    
+    public void PunchAlien()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("AttackTrigger"); // Déclenche l'animation de coup de poing
+        }
+    }
+
 
     private void ToggleRagdoll(bool state)
     {

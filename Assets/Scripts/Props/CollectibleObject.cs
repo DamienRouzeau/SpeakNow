@@ -36,7 +36,7 @@ public class CollectibleObject : MonoBehaviour
             interactionManager = InteractionManager.instance;
             if (interactionManager != null)
             {
-                InteractionManager.instance.Sub(Collect, 1);              
+                InteractionManager.instance.Sub(Collect, transform);             
                 Debug.Log($"{itemName} s'est abonné à l'événement d'interaction.");
                 player = other.gameObject.transform.parent.gameObject;
             }

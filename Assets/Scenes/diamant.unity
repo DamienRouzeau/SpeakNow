@@ -14262,13 +14262,13 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 200
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: -0.1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!1001 &1988842993
@@ -14573,6 +14573,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3855889085726722492, guid: ab2c6a92e035332479796141ca193d9a, type: 3}
+      propertyPath: m_WarningMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855889085726722492, guid: ab2c6a92e035332479796141ca193d9a, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4130550421183332470, guid: ab2c6a92e035332479796141ca193d9a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -12
@@ -14633,6 +14641,10 @@ PrefabInstance:
       propertyPath: itemInHand
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8384099937160191272, guid: ab2c6a92e035332479796141ca193d9a, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 95090606}
     - target: {fileID: 8431577934715117794, guid: ab2c6a92e035332479796141ca193d9a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

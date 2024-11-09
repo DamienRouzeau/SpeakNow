@@ -4,9 +4,10 @@ using UnityEngine.Events;
 
 public class InteractionManager : MonoBehaviour
 {
-    private SortedList<int, UnityAction> interactionQueue = new SortedList<int, UnityAction>(); // Trie les interactions par priorité
+    private List<(float distance, UnityAction action, Transform interactableTransform)> interactionQueue = new List<(float, UnityAction, Transform)>();
     private static InteractionManager Instance { get; set; }
     public static InteractionManager instance => Instance;
+    public Transform playerTransform; // Assurez-vous de l'assigner au joueur dans l'inspecteur.
 
     private void Awake()
     {
@@ -20,38 +21,48 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    // Méthode pour s'abonner avec une priorité
-    public void Sub(UnityAction action, int priority)
+    public void Sub(UnityAction action, Transform interactableTransform)
     {
-        // Assurez-vous que chaque clé (priorité) est unique
-        while (interactionQueue.ContainsKey(priority)) priority++;
-        
-        interactionQueue.Add(priority, action);
-        Debug.Log($"Objet ajouté avec priorité {priority}. Nombre total d'abonnés : {interactionQueue.Count}");
+        if (interactableTransform.GetComponent<Collider>().enabled) // Vérifie si l'interaction est possible
+        {
+            float distance = Vector3.Distance(playerTransform.position, interactableTransform.position);
+            interactionQueue.Add((distance, action, interactableTransform));
+            Debug.Log($"Objet ajouté avec distance {distance}. Nombre total d'abonnés : {interactionQueue.Count}");
+        }
     }
+
 
     // Méthode pour se désabonner
     public void Unsub(UnityAction action)
     {
-        foreach (var key in interactionQueue.Keys)
-        {
-            if (interactionQueue[key] == action)
-            {
-                interactionQueue.Remove(key);
-                break;
-            }
-        }
+        interactionQueue.RemoveAll(item => item.action == action);
         Debug.Log("Objet supprimé de l'interaction. Nombre total d'abonnés : " + interactionQueue.Count);
     }
 
-    // Méthode pour invoquer l'interaction de priorité la plus élevée
+    // Méthode pour invoquer l'interaction la plus proche
     public void Interact()
     {
         if (interactionQueue.Count > 0)
         {
-            var highestPriorityAction = interactionQueue.Values[0];
-            highestPriorityAction.Invoke();
-            Debug.Log("Interaction exécutée pour l'objet avec la plus haute priorité.");
+            // Trier par distance pour que l'objet le plus proche soit en premier
+            interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
+
+            var closestAction = interactionQueue[0].action;
+            closestAction.Invoke();
+            Debug.Log("Interaction exécutée pour l'objet le plus proche.");
+        }
+    }
+
+    // Mise à jour des distances pour chaque objet dans la file d'attente
+    private void Update()
+    {
+        if (playerTransform == null) return;
+
+        for (int i = 0; i < interactionQueue.Count; i++)
+        {
+            var item = interactionQueue[i];
+            float updatedDistance = Vector3.Distance(playerTransform.position, item.interactableTransform.position);
+            interactionQueue[i] = (updatedDistance, item.action, item.interactableTransform);
         }
     }
 }
