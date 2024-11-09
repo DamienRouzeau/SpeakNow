@@ -18,6 +18,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField]
     private string questName;
     private InventorySystem inventory = InventorySystem.instance;
+    [SerializeField]
+    private bool shouldLookAtPlayer = true;
 
     private void Start()
     {
@@ -40,7 +42,7 @@ public class DialogueManager : MonoBehaviour
             player.transform.position.z
             );
         animator.SetBool("talk", true);
-        transform.LookAt(targetPosition);
+        if(shouldLookAtPlayer) transform.LookAt(targetPosition);
         canvas.SetActive(true);
         // activer le bruit de talk ici
     }

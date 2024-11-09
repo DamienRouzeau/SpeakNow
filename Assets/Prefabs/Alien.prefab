@@ -53,6 +53,7 @@ MonoBehaviour:
   dialogueDuration: 1.5
   animator: {fileID: 8891183454640474011}
   questName: 
+  shouldLookAtPlayer: 1
 --- !u!54 &6633515384087987018
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -498,7 +499,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5434076151142098111}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
