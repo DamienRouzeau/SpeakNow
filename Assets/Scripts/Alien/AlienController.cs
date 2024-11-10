@@ -86,20 +86,36 @@ public class AlienController : MonoBehaviour
         {
             Debug.Log("KnockOut appelé - tentative de mise KO.");
             Vector3 rayStart = player.position + Vector3.up * 1.5f;
+            ThirdPersonController playerController = player.GetComponent<ThirdPersonController>();
+            
             Vector3 targetPoint = transform.position + Vector3.up * 1.0f;
             Vector3 directionToAlien = (targetPoint - rayStart).normalized;
             float distanceToAlien = Vector3.Distance(rayStart, targetPoint);
 
             Debug.DrawRay(rayStart, directionToAlien * distanceToAlien, Color.red, 60.0f);
-
+            if (playerController != null)
+            {
+                playerController.PunchAlien(); // Déclenche le coup de poing du joueur
+            }
+            
             if (Physics.Raycast(rayStart, directionToAlien, out RaycastHit hit, distanceToAlien))
             {
                 if (hit.collider != null && hit.collider.gameObject == gameObject)
                 {
-                    float angle = Vector3.Angle(player.forward, directionToAlien);
+                    // Vérification d'angle supplémentaire pour s'assurer que le joueur regarde vraiment vers l'alien
+                    Vector3 playerForward = player.forward;
+                    float angle = Vector3.Angle(playerForward, directionToAlien);
+
+                    // Si l'angle est inférieur à 45 degrés, alors l'alien est en face
                     if (angle < 45.0f)
                     {
-                        Debug.Log("Alien touché et KO.");
+                        // Déclencher le coup de poing uniquement si l'angle et le Raycast sont valides
+                        if (playerController != null)
+                        {
+                            playerController.PunchAlien(); // Déclenche le coup de poing du joueur
+                        }
+
+                        Debug.Log("KnockOut appelé - Alien va passer en mode KO.");
                         isKnockedOut = true;
                         isPursuing = false;
                         isAttacking = false;
