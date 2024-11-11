@@ -66,7 +66,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
         isGrounded = characterController.isGrounded;
         animator.SetBool("isJumping", isJumping);
-
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
@@ -171,18 +170,19 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         if (context.performed && isGrounded)
         {
             isJumping = true;
-            animator.SetBool("isJumping", true);
-            StartCoroutine(ApplyJumpForce(0.7f));
+            animator.SetTrigger("Jumping");
+            velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
+            //StartCoroutine(ApplyJumpForce(0.7f));
         }
     }
 
-    private IEnumerator ApplyJumpForce(float delay)
+    /*private IEnumerator ApplyJumpForce(float delay)
     {
         yield return new WaitForSeconds(delay);
         velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
         isJumping = false;
         animator.SetBool("isJumping", false);
-    }
+    }*/
 
     public void OnRun(InputAction.CallbackContext context)
     {

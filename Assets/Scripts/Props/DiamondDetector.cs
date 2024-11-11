@@ -9,7 +9,7 @@ public class DiamondDetector : MonoBehaviour
     Animator doorToOpen;
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.name == "Diamant")
+        if (collision.collider.gameObject.name == "Diamond")
         {
             doorToOpen.SetTrigger("Open");
         }
@@ -17,7 +17,7 @@ public class DiamondDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name == "Diamant")
+        if (other.gameObject.name == "Diamond")
         {
             doorToOpen.SetTrigger("Open");
         }

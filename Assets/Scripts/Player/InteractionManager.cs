@@ -83,6 +83,11 @@ public class InteractionManager : MonoBehaviour
             interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
             var closestAction = interactionQueue[0].action;
             closestAction.Invoke();
+            Unsub(closestAction, interactionQueue[0].interactableTransform);
+        }
+        else
+        {
+            inventorySystem.RemoveItemInHand();
         }
     }
 
