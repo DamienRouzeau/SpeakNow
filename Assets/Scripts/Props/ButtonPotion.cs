@@ -11,32 +11,40 @@ public class ButtonPotion : MonoBehaviour
     [SerializeField]
     private Animator animator;
 
-
     private void Start()
     {
         interactionManager = InteractionManager.instance;
+        if (interactionManager == null)
+        {
+            Debug.LogError($"{gameObject.name} n'a pas pu récupérer l'instance d'InteractionManager.");
+        }
+        else
+        {
+            Debug.Log($"{gameObject.name} a récupéré InteractionManager.");
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Sub(CheckRecette, this.gameObject);
-            interactionManager.HighlightClosest();
+            Debug.Log($"{gameObject.name} a détecté InteractionArea dans OnTriggerEnter");
+            interactionManager.Sub(CheckRecette, transform);
+            interactionManager.HighlightClosestObject();
             player = other.gameObject.transform.parent.gameObject;
         }
     }
-
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Unsub(CheckRecette, this.gameObject);
+            Debug.Log($"{gameObject.name} a quitté InteractionArea dans OnTriggerExit");
+            interactionManager.Unsub(CheckRecette, transform);
             player = null;
-
         }
     }
+
 
     public void CheckRecette()
     {

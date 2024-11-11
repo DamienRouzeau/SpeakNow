@@ -1,22 +1,27 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class InteractionManager : MonoBehaviour
 {
-    private UnityEvent interact = new UnityEvent();
-    private List<UnityAction> subscribers = new List<UnityAction>();
-    public List<GameObject> interactibleObjects;
+    private List<(float distance, UnityAction action, Transform interactableTransform)> interactionQueue = new List<(float, UnityAction, Transform)>();
     private static InteractionManager Instance { get; set; }
     public static InteractionManager instance => Instance;
+    public Transform playerTransform;
+
     [SerializeField]
-    private float highlightWidht = 5;
+    private float highlightWidth = 5;
+
+    public List<GameObject> interactibleObjects = new List<GameObject>();
+    private Transform lastHighlightedObject = null;
+
+    [SerializeField]
+    private Transform handTransform; // Transform de la main du personnage
+
+    private InventorySystem inventorySystem; // Référence à InventorySystem
 
     private void Awake()
     {
-        // If there is an instance, and it's not me, delete myself.
-
         if (Instance != null && Instance != this)
         {
             Destroy(this);
@@ -27,91 +32,149 @@ public class InteractionManager : MonoBehaviour
         }
     }
 
-    public void Sub(UnityAction _action)
+    private void Start()
     {
-        interact.AddListener(_action);
-        subscribers.Add(_action);
-    }
-
-    public void Sub(UnityAction _action, GameObject _interactibleInRange)
-    {
-        interact.AddListener(_action);
-        subscribers.Add(_action);
-        interactibleObjects.Add(_interactibleInRange);
-    }
-
-    public void Unsub(UnityAction _action, GameObject _interactibleInRange)
-    {
-        if (_interactibleInRange.CompareTag("Highlightable"))
+        // Assurez-vous que l'InventorySystem est attaché au joueur
+        if (playerTransform != null)
         {
-            Outline _outlineToDisable = _interactibleInRange.GetComponent<Outline>();
-            _outlineToDisable.outlineWidth = 0;
-            _outlineToDisable.UpdateMaterialProperties();
+            inventorySystem = playerTransform.GetComponent<InventorySystem>();
+            if (inventorySystem == null)
+            {
+                Debug.LogWarning("InventorySystem n'est pas assigné dans InteractionManager.");
+            }
         }
-        interact.RemoveListener(_action);
-        subscribers.Remove(_action);
-        interactibleObjects.Remove(_interactibleInRange);
+    }
+
+    public void Sub(UnityAction action, Transform interactableTransform)
+    {
+        if (interactableTransform != null && interactableTransform.GetComponent<Collider>().enabled)
+        {
+            float distance = Vector3.Distance(playerTransform.position, interactableTransform.position);
+            interactionQueue.Add((distance, action, interactableTransform));
+            interactibleObjects.Add(interactableTransform.gameObject);
+            Debug.Log($"Objet ajouté à l'interaction: {interactableTransform.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"Échec d'abonnement : Collider manquant ou désactivé sur {interactableTransform?.name}");
+        }
+    }
+
+    public void Unsub(UnityAction action, Transform interactableTransform)
+    {
+        interactionQueue.RemoveAll(item => item.action == action);
+        interactibleObjects.Remove(interactableTransform.gameObject);
+        Debug.Log($"Objet désabonné de l'interaction : {interactableTransform.name}");
+
+        if (lastHighlightedObject == interactableTransform)
+        {
+            Outline outlineToDisable = interactableTransform.GetComponent<Outline>();
+            if (outlineToDisable != null)
+            {
+                outlineToDisable.outlineWidth = 0;
+                outlineToDisable.UpdateMaterialProperties();
+            }
+            lastHighlightedObject = null;
+        }
     }
 
     public void Interact()
     {
-        if (interactibleObjects.Count > 1)
+        if (interactionQueue.Count > 0)
         {
-            int idClosestObject = 0;
-            float closestDistance = Vector3.Distance(interactibleObjects[0].transform.position, transform.position);
-
-            foreach (GameObject obj in interactibleObjects)
-            {
-                float tryDistance = Vector3.Distance(obj.transform.position, transform.position);
-                if (tryDistance < closestDistance)
-                {
-                    closestDistance = tryDistance;
-                    idClosestObject = interactibleObjects.IndexOf(obj);
-                }
-            }
-            subscribers[idClosestObject].Invoke();
-            Unsub(subscribers[idClosestObject], interactibleObjects[idClosestObject]);
-        }
-        else if(interactibleObjects.Count == 1)
-        {
-            subscribers[0].Invoke();
-        }
-        else if (InventorySystem.instance.itemInHand != null && interactibleObjects.Count <= 0)
-        {
-            InventorySystem.instance.RemoveItemInHand();
-        }
-        else
-        {
-            interact.Invoke();
+            interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
+            var closestAction = interactionQueue[0].action;
+            closestAction.Invoke();
+            Debug.Log("Interagissant avec l'objet le plus proche.");
         }
     }
 
-
-    public void HighlightClosest()
+    private void Update()
     {
-        int idClosestObject = 0;
-        float closestDistance = Vector3.Distance(interactibleObjects[0].transform.position, transform.position);
-        foreach (GameObject obj in interactibleObjects)
+        if (playerTransform == null) return;
+
+        for (int i = interactionQueue.Count - 1; i >= 0; i--)
         {
-            float tryDistance = Vector3.Distance(obj.transform.position, transform.position);
-            if (tryDistance < closestDistance)
+            var item = interactionQueue[i];
+
+            if (item.interactableTransform == null)
             {
-                closestDistance = tryDistance;
-                idClosestObject = interactibleObjects.IndexOf(obj);
-                if (interactibleObjects[idClosestObject].CompareTag("Highlightable"))
-                {
-                    Outline _outlineToActive = interactibleObjects[idClosestObject].GetComponent<Outline>();
-                    _outlineToActive.outlineWidth = 0;
-                    _outlineToActive.UpdateMaterialProperties();
-                }
+                interactionQueue.RemoveAt(i);
+                continue;
             }
-        }
-        if (interactibleObjects[idClosestObject].CompareTag("Highlightable"))
-        {
-            Outline _outlineToActive = interactibleObjects[idClosestObject].GetComponent<Outline>();
-            _outlineToActive.outlineWidth = highlightWidht;
-            _outlineToActive.UpdateMaterialProperties();
+
+            float updatedDistance = Vector3.Distance(playerTransform.position, item.interactableTransform.position);
+            interactionQueue[i] = (updatedDistance, item.action, item.interactableTransform);
         }
 
+        HighlightClosestObject();
     }
+
+    public void HighlightClosestObject()
+{
+    if (interactionQueue.Count == 0)
+    {
+        if (lastHighlightedObject != null)
+        {
+            Outline outlineToDisable = lastHighlightedObject.GetComponent<Outline>();
+            if (outlineToDisable != null)
+            {
+                outlineToDisable.outlineWidth = 0;
+                outlineToDisable.UpdateMaterialProperties();
+            }
+            lastHighlightedObject = null;
+        }
+        return;
+    }
+
+    interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
+    Transform closestObject = interactionQueue[0].interactableTransform;
+
+    // Vérifie si l'objet est celui actuellement en main et l'ignore pour le surlignage
+    if (inventorySystem != null && inventorySystem.itemInHand != null)
+    {
+        Debug.Log($"Objet actuellement en main: {inventorySystem.itemInHand.name}");
+
+        if (closestObject == inventorySystem.itemInHand.transform)
+        {
+            Debug.Log($"Objet ignoré pour le highlight car il est tenu dans la main: {closestObject.name}");
+
+            // Si l'objet est dans la main, on retire également tout highlight en cours
+            if (lastHighlightedObject != null)
+            {
+                Outline outlineToDisable = lastHighlightedObject.GetComponent<Outline>();
+                if (outlineToDisable != null)
+                {
+                    outlineToDisable.outlineWidth = 0;
+                    outlineToDisable.UpdateMaterialProperties();
+                }
+                lastHighlightedObject = null;
+            }
+
+            return; // Ignore l'objet en main pour le highlight
+        }
+    }
+
+    // Si un autre objet est déjà surligné, désactive son surlignage
+    if (lastHighlightedObject != null && lastHighlightedObject != closestObject)
+    {
+        Outline outlineToDisable = lastHighlightedObject.GetComponent<Outline>();
+        if (outlineToDisable != null)
+        {
+            outlineToDisable.outlineWidth = 0;
+            outlineToDisable.UpdateMaterialProperties();
+        }
+    }
+
+    // Active le surlignage pour l'objet le plus proche s'il n'est pas dans la main
+    Outline outlineToEnable = closestObject.GetComponent<Outline>();
+    if (outlineToEnable != null)
+    {
+        outlineToEnable.outlineWidth = highlightWidth;
+        outlineToEnable.UpdateMaterialProperties();
+        Debug.Log($"Highlight activé sur : {closestObject.name}");
+    }
+
+    lastHighlightedObject = closestObject;
+}
 }

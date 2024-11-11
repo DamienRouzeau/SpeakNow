@@ -51,7 +51,7 @@ public class DialogueManager : MonoBehaviour
     {
         if(other.CompareTag("InteractionArea"))
         {
-            interactionManager.Sub(StartDialogue, this.gameObject);
+            interactionManager.Sub(StartDialogue, transform);
             Debug.Log(other.gameObject.name);
             player = other.gameObject.transform.parent.gameObject;
         }
@@ -61,7 +61,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Unsub(StartDialogue, this.gameObject);
+            interactionManager.Unsub(StartDialogue, transform);
             player = null;
             canvas.SetActive(false);
             animator.SetBool("talk", false);

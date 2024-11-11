@@ -24,28 +24,30 @@ public class RecipientManager : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Sub(AddIngredient, this.gameObject);
-            interactionManager.HighlightClosest();
+            Debug.Log($"{gameObject.name} a détecté InteractionArea dans OnTriggerEnter");
+            interactionManager.Sub(AddIngredient, transform);
+            interactionManager.HighlightClosestObject();
             player = other.gameObject.transform.parent.gameObject;
         }
     }
-
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("InteractionArea"))
         {
-            interactionManager.Unsub(AddIngredient, this.gameObject);
+            Debug.Log($"{gameObject.name} a quitté InteractionArea dans OnTriggerExit");
+            interactionManager.Unsub(AddIngredient, transform);
             player = null;
         }
     }
+
 
     public void AddIngredient()
     {
         InventorySystem inventory = player.GetComponent<InventorySystem>();
         CollectibleObject ingredient = inventory.itemInHand;
         if (ingredient == null) return;
-        inventory.RemoveItemInHand();
+        // inventory.RemoveItemInHand();
         switch (ingredient.itemName)
         {
             case "Carrot":
