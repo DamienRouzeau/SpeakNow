@@ -52,7 +52,6 @@ public class InteractionManager : MonoBehaviour
             float distance = Vector3.Distance(playerTransform.position, interactableTransform.position);
             interactionQueue.Add((distance, action, interactableTransform));
             interactibleObjects.Add(interactableTransform.gameObject);
-            Debug.Log($"Objet ajouté à l'interaction: {interactableTransform.name}");
         }
         else
         {
@@ -64,7 +63,6 @@ public class InteractionManager : MonoBehaviour
     {
         interactionQueue.RemoveAll(item => item.action == action);
         interactibleObjects.Remove(interactableTransform.gameObject);
-        Debug.Log($"Objet désabonné de l'interaction : {interactableTransform.name}");
 
         if (lastHighlightedObject == interactableTransform)
         {
@@ -85,7 +83,6 @@ public class InteractionManager : MonoBehaviour
             interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
             var closestAction = interactionQueue[0].action;
             closestAction.Invoke();
-            Debug.Log("Interagissant avec l'objet le plus proche.");
         }
     }
 
@@ -133,11 +130,9 @@ public class InteractionManager : MonoBehaviour
     // Vérifie si l'objet est celui actuellement en main et l'ignore pour le surlignage
     if (inventorySystem != null && inventorySystem.itemInHand != null)
     {
-        Debug.Log($"Objet actuellement en main: {inventorySystem.itemInHand.name}");
 
         if (closestObject == inventorySystem.itemInHand.transform)
         {
-            Debug.Log($"Objet ignoré pour le highlight car il est tenu dans la main: {closestObject.name}");
 
             // Si l'objet est dans la main, on retire également tout highlight en cours
             if (lastHighlightedObject != null)
@@ -172,7 +167,6 @@ public class InteractionManager : MonoBehaviour
     {
         outlineToEnable.outlineWidth = highlightWidth;
         outlineToEnable.UpdateMaterialProperties();
-        Debug.Log($"Highlight activé sur : {closestObject.name}");
     }
 
     lastHighlightedObject = closestObject;

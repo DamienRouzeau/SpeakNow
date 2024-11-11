@@ -35,7 +35,6 @@ public class InventorySystem : MonoBehaviour
     public void AddStackableItemToInventory(CollectibleObject item)
     {
         stackableInventory.Add(item.GetItemName());
-        Debug.Log($"Stackable item added. Total count: {stackableInventory.Count}");
         item.gameObject.SetActive(false); // Désactive l'objet après la collecte
     }
 
@@ -63,6 +62,9 @@ public class InventorySystem : MonoBehaviour
         itemInHand = item;
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.Euler(180, 0, 0);
+
+        InteractionManager interaction = InteractionManager.instance;
+        //interaction.interactibleObjects.Unsub(interaction.);
     }
 
     public void RemoveItemInHand()

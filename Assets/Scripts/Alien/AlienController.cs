@@ -207,12 +207,13 @@ public class AlienController : MonoBehaviour
             InventorySystem inventory = player.GetComponent<InventorySystem>();
             if (inventory != null && inventory.itemInHand != null && inventory.itemInHand.GetItemName() == "Diamant")
             {
-                Rigidbody diamondRb = diamond.GetComponent<Rigidbody>();
-                if (diamondRb != null) diamondRb.isKinematic = false;
+                inventory.RemoveItemInHand();
+                //Rigidbody diamondRb = diamond.GetComponent<Rigidbody>();
+                //if (diamondRb != null) diamondRb.isKinematic = false;
 
-                inventory.itemInHand.transform.parent = null;
-                inventory.itemInHand = null;
-                Debug.Log("Le diamant a été retiré de la main du joueur.");
+                //inventory.itemInHand.transform.parent = null;
+                //inventory.itemInHand = null;
+                //Debug.Log("Le diamant a été retiré de la main du joueur.");
             }
         }
 

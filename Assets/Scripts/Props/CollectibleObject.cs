@@ -33,12 +33,10 @@ public class CollectibleObject : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            Debug.Log($"{itemName} a détecté InteractionArea dans OnTriggerEnter");
             interactionManager = InteractionManager.instance;
             if (interactionManager != null)
             {
                 interactionManager.Sub(Collect, transform);
-                Debug.Log($"{itemName} s'est abonné à l'événement d'interaction.");
                 player = other.gameObject.transform.parent.gameObject;
             }
             else
@@ -54,7 +52,6 @@ public class CollectibleObject : MonoBehaviour
         {
             if (interactionManager != null)
             {
-                Debug.Log($"{itemName} a quitté InteractionArea dans OnTriggerExit");
                 interactionManager.Unsub(Collect, transform);
             }
             player = null;
@@ -63,7 +60,6 @@ public class CollectibleObject : MonoBehaviour
 
     public void Collect()
     {
-        Debug.Log($"Tentative de collecte de : {itemName}");
 
         if (player == null)
         {
@@ -76,7 +72,6 @@ public class CollectibleObject : MonoBehaviour
         // Bloque seulement la collecte si le joueur est en ragdoll
         if (playerController != null && playerController.isRagdoll)
         {
-            Debug.Log("Impossible de collecter l'objet pendant le ragdoll.");
             return; // Annule la collecte si en ragdoll
         }
 
@@ -103,7 +98,6 @@ public class CollectibleObject : MonoBehaviour
                 if (alien != null && !alien.IsKnockedOut())
                 {
                     alien.StartPursuing();
-                    Debug.Log("L'alien commence la poursuite car le diamant a été collecté.");
                 }
             }
         }
