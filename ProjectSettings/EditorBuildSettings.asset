@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Potion.unity
-    guid: e1827fa8d66e73540bdcee5322100698
+    path: Assets/Scenes/VerticalSlice.unity
+    guid: ec6099e720e0fca4d8665315bcb72aa0
   m_configObjects: {}
