@@ -27,6 +27,8 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private Rigidbody[] ragdollRigidbodies;
     private Collider[] ragdollColliders;
     private InventorySystem inventorySystem;
+    [SerializeField]
+    private FeetDetectors feet;
 
     void Awake()
     {
@@ -64,8 +66,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     {
         if (isRagdoll) return;
 
-        isGrounded = characterController.isGrounded;
-        animator.SetBool("isJumping", isJumping);
+        isGrounded = feet.GetGrounded();
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
@@ -96,7 +97,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             walkParticle.Stop();
         }
 
-        velocity.y += Physics.gravity.y * Time.deltaTime;
+        velocity.y += 2 * Physics.gravity.y * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
 
         RotateCamera();
@@ -149,10 +150,24 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         }
     }
 
+    public void LittlePotion()
+    {
+        Vector3 _size = transform.localScale;
+        transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
+        StartCoroutine(ResizePlayer(_size));
+    }
+
+    private IEnumerator ResizePlayer(Vector3 normalSize)
+    {
+        yield return new WaitForSeconds(3);
+        transform.localScale = normalSize;
+    }
+
     private IEnumerator ExitRagdoll()
     {
         yield return new WaitForSeconds(3f);
         ToggleRagdoll(false);
+        feet.ResetCounter();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -172,6 +187,8 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             isJumping = true;
             animator.SetTrigger("Jumping");
             velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
+            isJumping = false;
+
             //StartCoroutine(ApplyJumpForce(0.7f));
         }
     }

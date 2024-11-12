@@ -72,6 +72,7 @@ public class InventorySystem : MonoBehaviour
         if (itemInHand != null)
         {
             itemInHand.rb.isKinematic = false;
+            itemInHand.rb.useGravity = true;
             itemInHand.transform.parent = null;
             itemInHand.transform.position = throwPosition.position;
             itemInHand.GetComponent<Collider>().enabled = true; // Réactiver le Collider

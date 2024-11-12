@@ -46,6 +46,7 @@ public class RecipientManager : MonoBehaviour
     {
         InventorySystem inventory = player.GetComponent<InventorySystem>();
         CollectibleObject ingredient = inventory.itemInHand;
+        inventory.RemoveItemInHand();
         if (ingredient == null) return;
         // inventory.RemoveItemInHand();
         switch (ingredient.itemName)

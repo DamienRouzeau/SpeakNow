@@ -78,6 +78,14 @@ public class InteractionManager : MonoBehaviour
 
     public void Interact()
     {
+        if (inventorySystem.itemInHand != null)
+        {
+            if (inventorySystem.itemInHand.itemName == "LittlePotion")
+            {
+                playerTransform.GetComponent<ThirdPersonController>().LittlePotion();
+                inventorySystem.DestroyItemInHand();
+            }
+        }
         if (interactionQueue.Count > 0)
         {
             interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));

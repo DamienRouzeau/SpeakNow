@@ -79,6 +79,13 @@ public class DialogueManager : MonoBehaviour
                     if (inventory.itemInHand.itemName == "Corn") return true;
                 }
                 break;
+            case "CalculQuest":
+                inventory = InventorySystem.instance;
+                if (inventory.itemInHand != null)
+                {
+                    if (inventory.itemInHand.itemName == "7") return true;
+                }
+                break;
             default: return false;
         }
         return false;
@@ -92,6 +99,10 @@ public class DialogueManager : MonoBehaviour
         {
             case "CornQuest":
                 CornQuest.instance.Resolve();
+                inventory.DestroyItemInHand();
+                break;
+            case "CalculQuest":
+                CalculQuest.instance.Resolve();
                 inventory.DestroyItemInHand();
                 break;
         }
