@@ -9,14 +9,14 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Sky 04
   m_Shader: {fileID: 4800000, guid: 6fc9318f5193c094c98c0d450cd61e3b, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _BACKGROUNDMODE_COLORS
   - _ENABLECLOUDSROTATION_ON
-  - _ENABLECLOUDS_ON
   - _ENABLEPATTERNOVERLAY_ON
   - _ENABLESTARSTWINKLING_ON
   - _ENABLESTARS_ON
-  - _ENABLESUN_ON
   m_InvalidKeywords:
   - _BUILTINFOG_ON
   - _CLOUDS_ON
@@ -40,6 +40,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -224,7 +225,7 @@ Material:
     - _DstBlend: 0
     - _Enable1Twinkling: 0
     - _EnableBuiltinFog: 0
-    - _EnableClouds: 1
+    - _EnableClouds: 0
     - _EnableCloudsColormap: 0
     - _EnableCloudsRotation: 1
     - _EnableDirectionLight: 0
@@ -238,7 +239,7 @@ Material:
     - _EnableStarsRotation: 0
     - _EnableStarsSunMask: 1
     - _EnableStarsTwinkling: 1
-    - _EnableSun: 1
+    - _EnableSun: 0
     - _EnableSunMask: 1
     - _EnableSunMoon: 1
     - _EnableSunMoonMask: 1
@@ -341,12 +342,12 @@ Material:
     - _Color2: {r: 0.059472326, g: 0.25068596, b: 0.8088235, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Eq: {r: 1, g: 0.6769777, b: 0.330882, a: 0}
-    - _EquatorColor: {r: 1, g: 0.41176462, b: 0.66734266, a: 1}
+    - _EquatorColor: {r: 0, g: 0, b: 0, a: 1}
     - _Ground: {r: 0.4779411, g: 0.43111518, b: 0.23545504, a: 0}
-    - _GroundColor: {r: 0.772, g: 0.6240809, b: 0.8265468, a: 1}
+    - _GroundColor: {r: 0, g: 0, b: 0, a: 1}
     - _MoonColor: {r: 1, g: 1, b: 1, a: 1}
     - _Sky: {r: 0.6691177, g: 0.29519898, b: 0.29519898, a: 0}
-    - _SkyColor: {r: 0, g: 0.122113906, b: 0.60294116, a: 1}
+    - _SkyColor: {r: 0.03804734, g: 0.058874123, b: 0.14150941, a: 1}
     - _SkyboxRotationAxis: {r: 0, g: 1, b: 0, a: 0}
     - _Skycol: {r: 0.27941146, g: 0.64219046, b: 1, a: 0}
     - _StarsRotationAxis: {r: 0, g: 1, b: 0, a: 0}
