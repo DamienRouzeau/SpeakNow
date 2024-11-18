@@ -18,6 +18,17 @@ public class CameraFreeLook : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        float savedSensitivity = PlayerPrefs.GetFloat("sensitivity");
+        if(savedSensitivity > 0.25f)
+        {
+            mouseSensitivity = PlayerPrefs.GetFloat("sensitivity") * 100;
+        }
+        else
+        {
+            PlayerPrefs.SetFloat("sensitivity", 0.5f);
+            mouseSensitivity = 50;                
+        }
+        
     }
 
     void LateUpdate()
