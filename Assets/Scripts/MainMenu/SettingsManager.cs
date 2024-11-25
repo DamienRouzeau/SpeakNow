@@ -55,6 +55,8 @@ public class SettingsManager : MonoBehaviour
     public void SaveNewSensitivity(Slider _slider)
     {
         float _value = _slider.value;
+        _value = Mathf.Round(_value * 100f) / 100f;
+
         sensitivityText.text = _value.ToString();
         PlayerPrefs.SetFloat("sensitivity", _value);
         PlayerPrefs.Save();
