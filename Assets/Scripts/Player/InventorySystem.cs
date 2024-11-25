@@ -16,7 +16,9 @@ public class InventorySystem : MonoBehaviour
     private Transform throwPosition;
     [SerializeField]
     private float throwStrength = 3f;
-    
+    [SerializeField]
+    private AudioSource audio;
+
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
@@ -77,7 +79,8 @@ public class InventorySystem : MonoBehaviour
             itemInHand.transform.position = throwPosition.position;
             itemInHand.GetComponent<Collider>().enabled = true; // Réactiver le Collider
             itemInHand.rb.AddForce(new Vector3(0, throwStrength, 0) + transform.forward * throwStrength, ForceMode.Impulse);
-
+            audio.volume = AudioManager.instance.GetVolume();
+            audio.Play();
             itemInHand = null;
         }
     }

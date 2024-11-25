@@ -4,15 +4,12 @@ using System.Collections;
 
 public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerControlsActions
 {
+    [Header("3C")]
     public float walkSpeed = 2f;
     public float runSpeed = 5f;
     public float rotationSpeed = 720f;
     public float jumpForce = 7f;
     public Transform cameraTransform;
-    [SerializeField]
-    public Animator animator;
-    public DoorController doorController;
-
     private CharacterController characterController;
     private PlayerInputActions inputActions;
     private Vector2 movementInput;
@@ -21,6 +18,10 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private bool isJumping = false;
     private Vector3 velocity;
     private bool isGrounded;
+
+    [SerializeField]
+    public Animator animator;
+    public DoorController doorController;
     public bool isRagdoll = false;
     [SerializeField]
     private ParticleSystem walkParticle;
@@ -31,6 +32,12 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private FeetDetectors feet;
     [SerializeField]
     private ParticleSystem particles;
+
+    [Header("Audio")]
+    [SerializeField]
+    private AudioSource[] stepAudios;
+    [SerializeField]
+    private AudioSource jumpAudio;
 
     void Awake()
     {
@@ -188,22 +195,16 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     {
         if (context.performed && isGrounded)
         {
+            jumpAudio.volume = AudioManager.instance.GetVolume();
+            jumpAudio.pitch = Random.Range(0.92f, 1.07f);
+            jumpAudio.Play();
             isJumping = true;
             animator.SetTrigger("Jumping");
             velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
             isJumping = false;
 
-            //StartCoroutine(ApplyJumpForce(0.7f));
         }
     }
-
-    /*private IEnumerator ApplyJumpForce(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
-        isJumping = false;
-        animator.SetBool("isJumping", false);
-    }*/
 
     public void OnRun(InputAction.CallbackContext context)
     {
@@ -229,5 +230,13 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
                 doorController.ToggleDoor();
             }
         }
+    }
+
+    public void PlayStepSound()
+    {
+        AudioSource step = stepAudios[Random.Range(0, stepAudios.Length)];
+        step.pitch = Random.Range(0.85f, 1.15f);
+        step.volume = AudioManager.instance.GetVolume();
+        step.Play();
     }
 }

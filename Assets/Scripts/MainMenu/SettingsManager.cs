@@ -21,6 +21,14 @@ public class SettingsManager : MonoBehaviour
     [SerializeField]
     private GameObject ongletGraphic;
 
+    [Header("Audio")]
+    [SerializeField]
+    private Slider volumeSlider;
+    [SerializeField]
+    private TMPro.TextMeshProUGUI volumeText;
+    [SerializeField]
+    private AudioSource mainMusic;
+
     [Header("Controls")]
     [SerializeField]
     private Slider sensitivitySlider;
@@ -50,6 +58,14 @@ public class SettingsManager : MonoBehaviour
             sensitivitySlider.value = PlayerPrefs.GetFloat("sensitivity");
             sensitivityText.text = PlayerPrefs.GetFloat("sensitivity").ToString();
         }
+
+        float savedVolume = PlayerPrefs.GetFloat("volume");
+        if (savedVolume > volumeSlider.minValue)
+        {
+            volumeSlider.value = PlayerPrefs.GetFloat("volume");
+
+            volumeText.text = (100 * PlayerPrefs.GetFloat("volume")).ToString();
+        }
     }
 
     public void SaveNewSensitivity(Slider _slider)
@@ -59,6 +75,17 @@ public class SettingsManager : MonoBehaviour
 
         sensitivityText.text = _value.ToString();
         PlayerPrefs.SetFloat("sensitivity", _value);
+        PlayerPrefs.Save();
+    }
+
+    public void SaveNewVolume(Slider _slider)
+    {
+        float _value = _slider.value;
+        _value = Mathf.Round(_value * 100f) / 100f;
+
+        volumeText.text = (100 *_value).ToString();
+        mainMusic.volume = _value;
+        PlayerPrefs.SetFloat("volume", _value);
         PlayerPrefs.Save();
     }
 

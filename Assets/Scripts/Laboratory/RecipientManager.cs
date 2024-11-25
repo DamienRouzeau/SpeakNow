@@ -23,9 +23,14 @@ public class RecipientManager : MonoBehaviour
     private Image ingredientMax;
     [SerializeField]
     private TextMeshProUGUI textScreen;
+    [SerializeField]
+    private Animator screenAnimation;
+    [SerializeField]
+    private AudioSource audio;
     private int nbIngredient = 0;
     private List<CollectibleObject> ingredientsList = new List<CollectibleObject>();
     public bool potionIsCreate = false;
+
 
 
 
@@ -63,7 +68,7 @@ public class RecipientManager : MonoBehaviour
 
     public void CheckRecipe()
     {
-        if (nbIngredient == 6 && carrotNB == 0 && gemNB == 0)
+        if (ingredientsList.Count == 6 && carrotNB == 0 && gemNB == 0)
         {
             potionIsCreate = true;
             ThrowPotion();
@@ -84,6 +89,7 @@ public class RecipientManager : MonoBehaviour
         textScreen.color = Color.red;
         ingredientQtt.color = Color.red;
         ingredientMax.color = Color.red;
+        screenAnimation.SetTrigger("Full");
         StartCoroutine(ResetScreen());
     }
 
@@ -141,6 +147,8 @@ public class RecipientManager : MonoBehaviour
 
     public void ThrowBackIngredient(CollectibleObject ingredient)
     {
+        audio.volume = AudioManager.instance.GetVolume();
+        audio.Play();
         ingredient.gameObject.SetActive(true);
         ingredient.transform.position = transform.position - (Vector3.right * 1f);
         ingredient.rb.AddForce(new Vector3(0, throwStrenght, 0) - new Vector3(1, 0, 0) * throwStrenght, ForceMode.Impulse);
@@ -148,6 +156,8 @@ public class RecipientManager : MonoBehaviour
 
     public void ThrowPotion()
     {
+        audio.volume = AudioManager.instance.GetVolume();
+        audio.Play();
         var _potion = Instantiate(potion);
         _potion.transform.position = transform.position - (Vector3.right * 1f);
         Rigidbody _rb = _potion.GetComponent<Rigidbody>();

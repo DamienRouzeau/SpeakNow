@@ -13,6 +13,8 @@ public class DoorController : MonoBehaviour
     private Quaternion rightDoorClosedRotation;
     private Quaternion leftDoorOpenRotation;
     private Quaternion rightDoorOpenRotation;
+    [SerializeField]
+    private AudioSource audio;
 
     private void Start()
     {
@@ -32,6 +34,8 @@ public class DoorController : MonoBehaviour
     public void ToggleDoor()
     {
         isOpen = true;
+        audio.volume = AudioManager.instance.GetVolume();
+        audio.Play();
         animatorLeft.SetTrigger("Open");
         animatorRight.SetTrigger("Open");
     }

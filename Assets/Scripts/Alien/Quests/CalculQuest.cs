@@ -9,6 +9,7 @@ public class CalculQuest : MonoBehaviour
     public static CalculQuest instance => Instance;
 
     public Animator doorToOpen;
+    public AudioSource audio;
 
 
     [SerializeField]
@@ -32,5 +33,6 @@ public class CalculQuest : MonoBehaviour
     public void Resolve()
     {
         doorToOpen.SetTrigger("MiOpen");
+        audio.Play();
     }
 }

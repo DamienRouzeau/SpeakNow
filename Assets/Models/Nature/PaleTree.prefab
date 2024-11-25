@@ -8,9 +8,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9072466643047624099, guid: 09ef8aaf7eb74a847add702e1e143d0a, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9190681272309715959, guid: 09ef8aaf7eb74a847add702e1e143d0a, type: 3}
       propertyPath: m_Name
-      value: Tree_01 (2) Variant
+      value: PaleTree
       objectReference: {fileID: 0}
     - target: {fileID: 9190681272309813207, guid: 09ef8aaf7eb74a847add702e1e143d0a, type: 3}
       propertyPath: m_LocalPosition.x

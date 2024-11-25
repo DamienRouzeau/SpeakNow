@@ -20,6 +20,13 @@ public class DialogueManager : MonoBehaviour
     private InventorySystem inventory = InventorySystem.instance;
     [SerializeField]
     private bool shouldLookAtPlayer = true;
+    [Header("Audio")]
+    [SerializeField]
+    private AudioSource audio;
+    [SerializeField]
+    private AudioSource questFinishedAudio;
+    [SerializeField]
+    private float minPitch, maxPitch;
 
     private void Start()
     {
@@ -35,6 +42,9 @@ public class DialogueManager : MonoBehaviour
             ResolveQuest();
             return;
         }
+        audio.pitch = Random.Range(minPitch, maxPitch);
+        audio.volume = AudioManager.instance.GetVolume();
+        audio.Play();
         Vector3 targetPosition = new Vector3
             (
             player.transform.position.x,
@@ -95,6 +105,9 @@ public class DialogueManager : MonoBehaviour
     {
         animator.SetBool("talk", false);
         animator.SetTrigger("QuestCompleted");
+        questFinishedAudio.pitch = Random.Range(minPitch, maxPitch);
+        questFinishedAudio.volume = AudioManager.instance.GetVolume();
+        questFinishedAudio.Play();
         switch (questName)
         {
             case "CornQuest":
