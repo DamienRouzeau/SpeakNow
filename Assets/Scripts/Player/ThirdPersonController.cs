@@ -29,6 +29,8 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private InventorySystem inventorySystem;
     [SerializeField]
     private FeetDetectors feet;
+    [SerializeField]
+    private ParticleSystem particles;
 
     void Awake()
     {
@@ -153,6 +155,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     public void LittlePotion()
     {
         Vector3 _size = transform.localScale;
+        particles.Play();
         transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
         StartCoroutine(ResizePlayer(_size));
     }
@@ -160,6 +163,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private IEnumerator ResizePlayer(Vector3 normalSize)
     {
         yield return new WaitForSeconds(3);
+        particles.Play();
         transform.localScale = normalSize;
     }
 

@@ -4909,6 +4909,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9106881333170699579}
     - target: {fileID: 1827486189867578653, guid: ab2c6a92e035332479796141ca193d9a, type: 3}
+      propertyPath: particles
+      value: 
+      objectReference: {fileID: 1941649185617246068}
+    - target: {fileID: 1827486189867578653, guid: ab2c6a92e035332479796141ca193d9a, type: 3}
       propertyPath: walkParticle
       value: 
       objectReference: {fileID: 1873777432480258020}
@@ -5314,6 +5318,11 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!198 &1941649185617246068 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2374006647182700631, guid: ab2c6a92e035332479796141ca193d9a, type: 3}
+  m_PrefabInstance: {fileID: 4179399630537738019}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2507649630633820376 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1787018517380876283, guid: ab2c6a92e035332479796141ca193d9a, type: 3}
