@@ -6,7 +6,7 @@ public class DiamondDetector : MonoBehaviour
 {
 
     [SerializeField]
-    Animator doorToOpen;
+    private Animator doorToOpen;
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.gameObject.name == "Diamond")

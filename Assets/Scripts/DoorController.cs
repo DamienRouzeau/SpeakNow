@@ -31,7 +31,7 @@ public class DoorController : MonoBehaviour
 
     public void ToggleDoor()
     {
-        isOpen = !isOpen;
+        isOpen = true;
         animatorLeft.SetTrigger("Open");
         animatorRight.SetTrigger("Open");
     }

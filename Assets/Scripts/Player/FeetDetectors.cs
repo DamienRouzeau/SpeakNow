@@ -36,21 +36,7 @@ public class FeetDetectors : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        surfaceCollisionCounter++;
-        isGrounded = true;
-    }
 
-    private void OnCollisionExit(Collision collision)
-    {
-        surfaceCollisionCounter--;
-        if (surfaceCollisionCounter <= 0)
-        {
-            surfaceCollisionCounter = 0;
-            isGrounded = false;
-        }
-    }
 
     public bool GetGrounded()
     {

@@ -49,9 +49,13 @@ public class ButtonPotion : MonoBehaviour
     public void CheckRecette()
     {
         animator.SetTrigger("Clic");
-        if (recipient.carrotNB <= 0 && recipient.gemNB <= 0)
+        if (recipient.potionIsCreate)
         {
             recipient.ThrowPotion();
+        }
+        else
+        {
+            recipient.CheckRecipe();
         }
     }
 }
