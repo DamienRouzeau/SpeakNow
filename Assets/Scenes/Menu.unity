@@ -304,11 +304,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8641969377892301832, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8939786697213986554, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
       propertyPath: m_Transition
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8939786697213986554, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
       propertyPath: m_Colors.m_NormalColor.b
@@ -398,11 +398,15 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8641969377892301832, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
     m_RemovedGameObjects:
     - {fileID: 3854971439201676625, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2930055867243438158, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1970799509}
   m_SourcePrefab: {fileID: 100100000, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
 --- !u!224 &160700277 stripped
 RectTransform:
@@ -1134,11 +1138,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8641969377892301832, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8641969377892301832, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d665555ee118a0c49ba8334f4001b541, type: 2}
     - target: {fileID: 8939786697213986554, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
       propertyPath: m_Transition
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8939786697213986554, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
       propertyPath: m_Colors.m_NormalColor.b
@@ -4027,6 +4035,32 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 3893159620387742124, guid: 0f00ddcf474e50b4c9ad7c4bb98abf83, type: 3}
   m_PrefabInstance: {fileID: 781455288870592594}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1970799504 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2930055867243438158, guid: 04b67d0cc3d190a48926f521c44d988a, type: 3}
+  m_PrefabInstance: {fileID: 160700276}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1970799509
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970799504}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d665555ee118a0c49ba8334f4001b541, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1989358677
 GameObject:
   m_ObjectHideFlags: 0
@@ -4478,6 +4512,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 775883495945479233, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993959416953992723, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_Intensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993959416953992723, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_SpotAngle
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993959416953992723, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5160710533659444352, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.3
