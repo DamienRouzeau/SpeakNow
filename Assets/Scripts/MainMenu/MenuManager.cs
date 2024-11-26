@@ -32,6 +32,7 @@ public class MenuManager : MonoBehaviour
     public void OnStartNewGame()
     {
         carAnimation.SetTrigger("start");
+
         StartCoroutine(StartGame());
     }
 
