@@ -2504,7 +2504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &952137496
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3212,7 +3212,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1242998854
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3945,21 +3945,21 @@ MonoBehaviour:
 
     <color=#826DD2>Sound Designer</color>
 
-    <size=60>None
-    </size>
+    <size=60> Damien
+    Rouzeau </size>
 
 
     <color=#826DD2>Remerciements</color>
 
-    <size=60> Axel Tetart
-    </size>
+    <size=60> Axel
+    Tetart </size>
 
     <size=60> Alexis Gelin </size>
 
-    <size=60> Alexandre Montel </size>
+    <size=60> Alexandre Montel
+    </size>
 
-    <size=60>
-    Gwenaelle Devriendt </size>
+    <size=60> Gwenaelle Devriendt </size>
 
 '
 --- !u!222 &1539730127
@@ -5354,6 +5354,46 @@ PrefabInstance:
     - target: {fileID: 5536426217878789690, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
       propertyPath: m_Name
       value: carAnimated
+      objectReference: {fileID: 0}
+    - target: {fileID: 7502330893458379627, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_Range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7502330893458379627, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_Intensity
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7502330893458379627, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_SpotAngle
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7502330893458379627, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863825709424563722, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863825709424563722, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863825709424563722, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 16.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863825709424563722, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.08219926
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863825709424563722, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.99661595
+      objectReference: {fileID: 0}
+    - target: {fileID: 8863825709424563722, guid: a5b8ab0f0134b8d4183a54043ab6ac1f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -189.43
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
