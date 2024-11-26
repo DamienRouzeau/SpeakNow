@@ -32,6 +32,13 @@ public class MenuManager : MonoBehaviour
     public void OnStartNewGame()
     {
         carAnimation.SetTrigger("start");
+        if(!PlayerPrefs.HasKey("volume"))
+        {
+            PlayerPrefs.SetFloat("volume", 1);
+            PlayerPrefs.Save();
+        }
+        float test = PlayerPrefs.GetFloat("volume");
+
         StartCoroutine(StartGame());
     }
 
