@@ -5843,12 +5843,22 @@ MonoBehaviour:
   rotationSpeed: 720
   jumpForce: 1
   cameraTransform: {fileID: 3883472978534667138}
+  camera: {fileID: 6982910850280624167}
+  capacities: []
+  littleSize: {x: 0.07, y: 0.07, z: 0.07}
+  normalSize: {x: 0.15, y: 0.15, z: 0.15}
+  bigSize: {x: 0.3, y: 0.3, z: 0.3}
+  littleFOV: 0
+  normalFOV: 0
+  bigFOV: 0
   animator: {fileID: 3855889085726722492}
   doorController: {fileID: 0}
   isRagdoll: 0
   walkParticle: {fileID: 0}
   feet: {fileID: 0}
   particles: {fileID: 0}
+  stepAudios: []
+  jumpAudio: {fileID: 0}
 --- !u!95 &3855889085726722492
 Animator:
   serializedVersion: 5
@@ -5887,6 +5897,8 @@ MonoBehaviour:
   hand: {fileID: 2450418492491671746}
   throwPosition: {fileID: 0}
   throwStrength: 3
+  audio: {fileID: 0}
+  thirdPersonController: {fileID: 0}
 --- !u!4 &4130550421183332470 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8c77a9742ed990640830b8be6f7695f5, type: 3}

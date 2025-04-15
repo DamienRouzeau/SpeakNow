@@ -136,6 +136,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Corn
       objectReference: {fileID: 0}
+    - target: {fileID: 6503503711565232062, guid: 1fa2f576380b9fd4ebb4c3edd6f5fe03, type: 3}
+      propertyPath: objectSize
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

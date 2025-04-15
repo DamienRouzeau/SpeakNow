@@ -1,6 +1,15 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System.Collections.Generic;
+
+public enum size
+{
+    little,
+    normal,
+    big,
+}
+
 
 public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerControlsActions
 {
@@ -18,6 +27,19 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private bool isJumping = false;
     private Vector3 velocity;
     private bool isGrounded;
+    [SerializeField] private Camera camera;
+
+    [Header("Capacities")]
+    [SerializeField] private List<string> capacities = new List<string>();
+    private int capacityIndex;
+    private bool littleBigCapacity = false;
+    [SerializeField] private Vector3 littleSize = new Vector3(0.07f, 0.07f, 0.07f);
+    [SerializeField] private Vector3 normalSize = new Vector3(0.15f, 0.15f, 0.15f);
+    [SerializeField] private Vector3 bigSize = new Vector3(0.3f, 0.3f, 0.3f);
+    private size size = size.normal;
+    [SerializeField] private CameraProfil littleCam;
+    [SerializeField] private CameraProfil normalCam;
+    [SerializeField] private CameraProfil bigCam;
 
     [SerializeField]
     public Animator animator;
@@ -120,7 +142,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         cameraTransform.Rotate(-rotationY, 0, 0);
         cameraTransform.Rotate(0, rotationX, 0, Space.World);
     }
-    
+
     public void PunchAlien()
     {
         if (animator != null)
@@ -149,7 +171,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
         isRagdoll = state;
     }
-    
+
     public void EnterRagdoll()
     {
         if (!isRagdoll)
@@ -158,21 +180,82 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             StartCoroutine(ExitRagdoll());
         }
     }
+    #region Capacities
 
     public void LittlePotion()
     {
-        Vector3 _size = transform.localScale;
-        particles.Play();
-        transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
-        StartCoroutine(ResizePlayer(_size));
+        switch (size)
+        {
+            case size.little:
+                return;
+            case size.normal:
+                particles.Play();
+                transform.localScale = littleSize;
+                cameraTransform.GetComponent<CameraFreeLook>().GetNewProfile(littleCam);
+                if (inventorySystem.itemInHand != null)
+                {
+                    inventorySystem.itemInHand.GetSmaller();
+                }
+                InteractionManager.instance.ClearInteractibleObjectList();
+                size = size.little;
+                break;
+            case size.big:
+                particles.Play();
+                transform.localScale = normalSize;
+                cameraTransform.GetComponent<CameraFreeLook>().GetNewProfile(normalCam);
+                if (inventorySystem.itemInHand != null)
+                {
+                    inventorySystem.itemInHand.GetSmaller();
+                }
+                InteractionManager.instance.ClearInteractibleObjectList();
+                size = size.normal;
+                break;
+            default:
+                Debug.LogWarning("Size not found");
+                break;
+        }
     }
 
-    private IEnumerator ResizePlayer(Vector3 normalSize)
+    public void BigPotion()
     {
-        yield return new WaitForSeconds(3);
-        particles.Play();
-        transform.localScale = normalSize;
+        switch (size)
+        {
+            case size.little:
+                particles.Play();
+                transform.localScale = normalSize;
+                cameraTransform.GetComponent<CameraFreeLook>().GetNewProfile(normalCam);
+                if (inventorySystem.itemInHand != null)
+                {
+                    inventorySystem.itemInHand.GetBigger();
+                }
+                InteractionManager.instance.ClearInteractibleObjectList();
+                size = size.normal;
+                break;
+            case size.normal:
+                particles.Play();
+                transform.localScale = bigSize;
+                cameraTransform.GetComponent<CameraFreeLook>().GetNewProfile(bigCam);
+                if (inventorySystem.itemInHand != null)
+                {
+                    inventorySystem.itemInHand.GetBigger();
+                }
+                InteractionManager.instance.ClearInteractibleObjectList();
+                size = size.big;
+                break;
+            case size.big:
+                return;
+            default:
+                Debug.LogWarning("Size not found");
+                break;
+        }
     }
+    private IEnumerator ActiveInteraction()
+    {
+        yield return new WaitForEndOfFrame();
+        InteractionManager.instance.transform.localScale = Vector3.one;
+    }
+
+    #endregion
 
     private IEnumerator ExitRagdoll()
     {
@@ -202,7 +285,6 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             animator.SetTrigger("Jumping");
             velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
             isJumping = false;
-
         }
     }
 
@@ -229,6 +311,75 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             {
                 doorController.ToggleDoor();
             }
+            if (inventorySystem.itemInHand != null && inventorySystem.itemInHand.GetItemName() == "Potion")
+            {
+                capacities.Add("Potion");
+                Debug.Log("Capacity 'potion' added");
+                inventorySystem.DestroyItemInHand();
+            }
+        }
+    }
+
+    public void AddCapacity(string capacityName)
+    {
+        capacities.Add(capacityName);
+    }
+
+    public void OnScroll(InputAction.CallbackContext context)
+    {
+        if (capacities.Count < 1) return;
+        Vector2 scrollIndex = context.ReadValue<Vector2>();
+        if (scrollIndex.y > 0)
+        {
+            capacityIndex++;
+            if (capacityIndex > capacities.Count - 1)
+            {
+                capacityIndex = 0;
+            }
+            else if (capacityIndex < 0)
+            {
+                capacityIndex = capacities.Count - 1;
+            }
+        }
+        else if (scrollIndex.y < 0)
+        {
+            capacityIndex--;
+        }
+    }
+
+    public void OnCapacity1(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (capacities.Count < 1) return;
+            Debug.Log(capacities[capacityIndex]);
+            switch (capacities[capacityIndex])
+            {
+                case "Potion": // Get smaller
+                    LittlePotion();
+                    break;
+                default:
+                    Debug.LogWarning("[Capacity] : Trying to use capacity without select an available capacity");
+                    break;
+            }
+        }
+    }
+
+    public void OnCapacity2(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (capacities.Count < 1) return;
+            Debug.Log(capacities[capacityIndex]);
+            switch (capacities[capacityIndex])
+            {
+                case "Potion": // Get bigger
+                    BigPotion();
+                    break;
+                default:
+                    Debug.LogWarning("[Capacity] : Trying to use capacity without select an available capacity");
+                    break;
+            }
         }
     }
 
@@ -239,4 +390,8 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         step.volume = AudioManager.instance.GetVolume();
         step.Play();
     }
+
+    #region Getter
+    public size GetSize() { return size; }
+    #endregion
 }

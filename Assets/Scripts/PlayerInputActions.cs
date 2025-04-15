@@ -71,6 +71,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""abd9cf03-11f4-4528-beae-ed32510c9f7c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Capacity1"",
+                    ""type"": ""Button"",
+                    ""id"": ""4e3e9c83-41a7-4605-bf67-982bdeb6e441"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Capacity2"",
+                    ""type"": ""Button"",
+                    ""id"": ""bf1a4c24-77f7-48ae-8f2e-e4e484cf9b91"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +199,39 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""72046b8c-769a-4227-bec3-2977a7175709"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2bf319d1-3aec-4a58-bc7e-6bb6de95b845"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Capacity2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""01f7a2d8-7385-4f77-9387-155ff6944163"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Capacity1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +245,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PlayerControls_Jump = m_PlayerControls.FindAction("Jump", throwIfNotFound: true);
         m_PlayerControls_Run = m_PlayerControls.FindAction("Run", throwIfNotFound: true);
         m_PlayerControls_Interact = m_PlayerControls.FindAction("Interact", throwIfNotFound: true);
+        m_PlayerControls_Scroll = m_PlayerControls.FindAction("Scroll", throwIfNotFound: true);
+        m_PlayerControls_Capacity1 = m_PlayerControls.FindAction("Capacity1", throwIfNotFound: true);
+        m_PlayerControls_Capacity2 = m_PlayerControls.FindAction("Capacity2", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -251,6 +314,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerControls_Jump;
     private readonly InputAction m_PlayerControls_Run;
     private readonly InputAction m_PlayerControls_Interact;
+    private readonly InputAction m_PlayerControls_Scroll;
+    private readonly InputAction m_PlayerControls_Capacity1;
+    private readonly InputAction m_PlayerControls_Capacity2;
     public struct PlayerControlsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -260,6 +326,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_PlayerControls_Jump;
         public InputAction @Run => m_Wrapper.m_PlayerControls_Run;
         public InputAction @Interact => m_Wrapper.m_PlayerControls_Interact;
+        public InputAction @Scroll => m_Wrapper.m_PlayerControls_Scroll;
+        public InputAction @Capacity1 => m_Wrapper.m_PlayerControls_Capacity1;
+        public InputAction @Capacity2 => m_Wrapper.m_PlayerControls_Capacity2;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -284,6 +353,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @Scroll.started += instance.OnScroll;
+            @Scroll.performed += instance.OnScroll;
+            @Scroll.canceled += instance.OnScroll;
+            @Capacity1.started += instance.OnCapacity1;
+            @Capacity1.performed += instance.OnCapacity1;
+            @Capacity1.canceled += instance.OnCapacity1;
+            @Capacity2.started += instance.OnCapacity2;
+            @Capacity2.performed += instance.OnCapacity2;
+            @Capacity2.canceled += instance.OnCapacity2;
         }
 
         private void UnregisterCallbacks(IPlayerControlsActions instance)
@@ -303,6 +381,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @Scroll.started -= instance.OnScroll;
+            @Scroll.performed -= instance.OnScroll;
+            @Scroll.canceled -= instance.OnScroll;
+            @Capacity1.started -= instance.OnCapacity1;
+            @Capacity1.performed -= instance.OnCapacity1;
+            @Capacity1.canceled -= instance.OnCapacity1;
+            @Capacity2.started -= instance.OnCapacity2;
+            @Capacity2.performed -= instance.OnCapacity2;
+            @Capacity2.canceled -= instance.OnCapacity2;
         }
 
         public void RemoveCallbacks(IPlayerControlsActions instance)
@@ -327,5 +414,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnScroll(InputAction.CallbackContext context);
+        void OnCapacity1(InputAction.CallbackContext context);
+        void OnCapacity2(InputAction.CallbackContext context);
     }
 }

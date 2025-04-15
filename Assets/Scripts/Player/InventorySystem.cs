@@ -18,6 +18,7 @@ public class InventorySystem : MonoBehaviour
     private float throwStrength = 3f;
     [SerializeField]
     private AudioSource audio;
+    [SerializeField] private ThirdPersonController thirdPersonController;
 
     private void Awake()
     {
@@ -42,6 +43,12 @@ public class InventorySystem : MonoBehaviour
 
     public void AddItemInHand(CollectibleObject item)
     {
+        if(item.name == "Potion")
+        {
+            thirdPersonController.AddCapacity("Potion");
+            Destroy(item.gameObject);
+            return;
+        }
         if (itemInHand != null && itemInHand != item)
         {
             itemInHand.transform.parent = null;
