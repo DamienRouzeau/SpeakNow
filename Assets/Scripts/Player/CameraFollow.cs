@@ -9,6 +9,7 @@ public class CameraFreeLook : MonoBehaviour
     public float cameraHeight = 3f; // Hauteur de la caméra par rapport au joueur
     public float headHeightOffset = 1.5f; // Décalage vertical pour viser la tête
     public LayerMask collisionLayers; // Les couches de collision
+    [HideInInspector] public bool cameraFrozen = false;
 
     private float rotationX = 0f;
     private float rotationY = 0f;
@@ -33,11 +34,15 @@ public class CameraFreeLook : MonoBehaviour
 
     void LateUpdate()
     {
+        
         // Récupérer les mouvements de la souris
-        rotationX += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        rotationY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-        rotationY = Mathf.Clamp(rotationY, minVerticalAngle, maxVerticalAngle);
-
+        if (!cameraFrozen)
+        {
+            // Récupérer les mouvements de la souris
+            rotationX += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+            rotationY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+            rotationY = Mathf.Clamp(rotationY, minVerticalAngle, maxVerticalAngle);
+        }
         // Calculer la position et la rotation de la caméra
         Quaternion rotation = Quaternion.Euler(rotationY, rotationX, 0);
         Vector3 offset = rotation * new Vector3(0, cameraHeight, -distanceFromPlayer);
