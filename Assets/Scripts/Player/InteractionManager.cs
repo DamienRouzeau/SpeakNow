@@ -156,10 +156,13 @@ public class InteractionManager : MonoBehaviour
         int i = 0;
         while (i < interactionQueue.Count)
         {
-            if(playerTransform.GetComponent<ThirdPersonController>().GetSize() == interactionQueue[i].interactableTransform.GetComponent<CollectibleObject>().GetSize())
+            if (interactionQueue[i].interactableTransform.GetComponent<CollectibleObject>())
             {
-                closestObject = interactionQueue[i].interactableTransform;
-                i = interactionQueue.Count;
+                if (playerTransform.GetComponent<ThirdPersonController>().GetSize() == interactionQueue[i].interactableTransform.GetComponent<CollectibleObject>().GetSize())
+                {
+                    closestObject = interactionQueue[i].interactableTransform;
+                    i = interactionQueue.Count;
+                }
             }
             i++;
         }
