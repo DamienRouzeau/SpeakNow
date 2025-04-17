@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e2fed31d3711d840a1dea5bab01658f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemName: LittlePotion
+  itemName: Potion
   isStackable: 0
   rb: {fileID: 4759591469222648658}
   objectSize: 1
