@@ -40,6 +40,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     [SerializeField] private CameraProfil littleCam;
     [SerializeField] private CameraProfil normalCam;
     [SerializeField] private CameraProfil bigCam;
+    [HideInInspector] public bool canRotateCamera = true;
 
     [SerializeField]
     public Animator animator;
@@ -131,7 +132,8 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         velocity.y += 2 * Physics.gravity.y * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
 
-        RotateCamera();
+        if (canRotateCamera)
+            RotateCamera();
     }
 
     void RotateCamera()
@@ -149,6 +151,10 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         {
             animator.SetTrigger("AttackTrigger");
         }
+    }
+
+    public void OnNoteBook(InputAction.CallbackContext context)
+    {
     }
 
     private void ToggleRagdoll(bool state)

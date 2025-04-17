@@ -51,27 +51,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Scroll",
-                    "type": "Value",
-                    "id": "abd9cf03-11f4-4528-beae-ed32510c9f7c",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Capacity1",
+                    "name": "NoteBook",
                     "type": "Button",
-                    "id": "4e3e9c83-41a7-4605-bf67-982bdeb6e441",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Capacity2",
-                    "type": "Button",
-                    "id": "bf1a4c24-77f7-48ae-8f2e-e4e484cf9b91",
+                    "id": "6c2f16fa-8bfc-4b2a-883e-cc8769afb981",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -180,34 +162,12 @@
                 },
                 {
                     "name": "",
-                    "id": "72046b8c-769a-4227-bec3-2977a7175709",
-                    "path": "<Mouse>/scroll",
+                    "id": "02df6c33-5a68-4a87-8806-7e52f99383e0",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Scroll",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2bf319d1-3aec-4a58-bc7e-6bb6de95b845",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Capacity2",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "01f7a2d8-7385-4f77-9387-155ff6944163",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Capacity1",
+                    "action": "NoteBook",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
