@@ -116,7 +116,7 @@ MonoBehaviour:
   itemName: LittlePotion
   isStackable: 0
   rb: {fileID: 4759591469222648658}
-  collider: {fileID: 4839893277295723213}
+  objectSize: 1
 --- !u!54 &4759591469222648658
 Rigidbody:
   m_ObjectHideFlags: 0

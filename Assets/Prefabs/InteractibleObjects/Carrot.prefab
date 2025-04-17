@@ -150,6 +150,7 @@ MonoBehaviour:
   itemName: Carrot
   isStackable: 0
   rb: {fileID: 6181779557245055421}
+  objectSize: 1
 --- !u!136 &3941799172688640391
 CapsuleCollider:
   m_ObjectHideFlags: 0
