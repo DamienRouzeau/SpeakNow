@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distanceFromPlayer: 10
   minDistanceFromPlayer: 4
-  minVerticalAngle: -10
-  maxVerticalAngle: 70
+  cameraHeight: 8
+  headheightOffset: 5
+  minVerticalAngle: -30
+  maxVerticalAngle: 40

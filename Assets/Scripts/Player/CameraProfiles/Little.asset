@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e93a7eaa3bbdf47b12ddde057e2d41, type: 3}
   m_Name: Little
   m_EditorClassIdentifier: 
-  distanceFromPlayer: 2
+  distanceFromPlayer: 1
   minDistanceFromPlayer: 0.3
-  minVerticalAngle: -50
-  maxVerticalAngle: 30
+  cameraHeight: 2
+  headheightOffset: 0.1
+  minVerticalAngle: -40
+  maxVerticalAngle: 20

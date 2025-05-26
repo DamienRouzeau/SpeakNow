@@ -36,6 +36,8 @@ public class CameraFreeLook : MonoBehaviour
     {
         distanceFromPlayer = profile.distanceFromPlayer;
         minDistanceFromPlayer = profile.minDistanceFromPlayer;
+        headHeightOffset = profile.headheightOffset;
+        cameraHeight = profile.cameraHeight;
         minVerticalAngle = profile.minVerticalAngle;
         maxVerticalAngle = profile.maxVerticalAngle;
 
