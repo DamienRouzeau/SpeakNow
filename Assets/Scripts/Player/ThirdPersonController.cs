@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
+using static UnityEngine.UI.Image;
 
 public enum size
 {
@@ -61,6 +62,10 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private AudioSource[] stepAudios;
     [SerializeField]
     private AudioSource jumpAudio;
+
+    [Header("Miscelaneous")]
+    [SerializeField] private LayerMask obstacleLayer;
+
 
     void Awake()
     {
@@ -224,6 +229,13 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
     public void BigPotion()
     {
+        Vector3 origin = transform.position + Vector3.up * 0.5f; // Légèrement au-dessus du sol
+        float distanceToCheck = 0.5f;
+        if (Physics.Raycast(origin, Vector3.up, out RaycastHit hit, distanceToCheck, obstacleLayer))
+        {
+            Debug.Log("Pas assez de place pour grandir, obstacle détecté au-dessus !");
+            return;
+        }
         switch (size)
         {
             case size.little:
@@ -377,6 +389,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         {
             if (capacities.Count < 1) return;
             Debug.Log(capacities[capacityIndex]);
+
             switch (capacities[capacityIndex])
             {
                 case "Potion": // Get bigger
