@@ -38,21 +38,25 @@ public class RatBehaviour : MonoBehaviour
         targettedSpotId++;
         if (targettedSpotId > spots.Count - 1)
             targettedSpotId = 0;
+        if (spotsLocked[targettedSpotId]) return;
         currentSpot = spots[targettedSpotId];
     }
 
     public void GoToOutSpot()
     {
+        if (spotsLocked[targettedSpotId]) return;
         currentSpot = outSpot;
     }
 
     public void LockDoor(int doorID)
     {
+        Debug.Log("Door locked");
         spotsLocked[doorID] = true;
     }
 
     public void UnlockDoor(int doorID)
     {
+        Debug.Log("Door unlocked");
         spotsLocked[doorID] = false;
     }
 }

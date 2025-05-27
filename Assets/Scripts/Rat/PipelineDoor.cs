@@ -19,8 +19,8 @@ public class PipelineDoor : MonoBehaviour
                 if (objectBlockingDoor) return;
                 Rigidbody rb = other.GetComponent<CollectibleObject>().rb;
                 rb.isKinematic = true;
-                other.gameObject.transform.position = anchor.position;
-                other.gameObject.transform.parent = anchor;
+                //other.gameObject.transform.parent = anchor;
+                other.gameObject.transform.position = anchor.transform.position;
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
                 rat.LockDoor(doorID);
@@ -36,8 +36,8 @@ public class PipelineDoor : MonoBehaviour
                 if (objectBlockingDoor) return;
                 Rigidbody rb = other.GetComponent<CollectibleObject>().rb;
                 rb.isKinematic = true;
-                other.gameObject.transform.position = anchor.position;
-                other.gameObject.transform.parent = anchor;
+                other.gameObject.transform.position = anchor.transform.position;
+                //other.gameObject.transform.parent = anchor;
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
                 rat.LockDoor(doorID);

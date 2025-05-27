@@ -229,10 +229,9 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.997, y: 0, z: 0}
-  m_LocalScale: {x: 0.070490524, y: 0.04, z: 0.067963876}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7510575000537431782}
+  m_Children: []
   m_Father: {fileID: 3468556683658156116}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4373062264456127759
@@ -254,8 +253,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.6835424, y: 1.0553756, z: 0.6932604}
-  m_Center: {x: 0.34177685, y: 0.027687848, z: 0.011628308}
+  m_Size: {x: 0.19997899, y: 0.0346529, z: 0.03622356}
+  m_Center: {x: 0.13062003, y: -0.00057332276, z: 0.0032663182}
 --- !u!114 &458768666892793074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,7 +268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorID: 1
-  anchor: {fileID: 7510575000537431782}
+  anchor: {fileID: 0}
   rat: {fileID: 0}
 --- !u!1 &2034312743365655220
 GameObject:
@@ -376,68 +375,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.15705396, z: 1}
   m_Center: {x: -4.4181278e-10, y: 0.42147276, z: 0.000000001863994}
---- !u!1 &2276867260802054867
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7510575000537431782}
-  m_Layer: 14
-  m_Name: Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7510575000537431782
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2276867260802054867}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.4, y: -0.424, z: -0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4535126432247713646}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3106480942553983886
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7836935156882572544}
-  m_Layer: 14
-  m_Name: Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7836935156882572544
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3106480942553983886}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.85, y: -0.509, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6048977422301537280}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3270690749674088027
 GameObject:
   m_ObjectHideFlags: 0
@@ -1120,10 +1057,9 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.064, y: 0, z: -0}
-  m_LocalScale: {x: 0.070490524, y: 0.04, z: 0.067963876}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7836935156882572544}
+  m_Children: []
   m_Father: {fileID: 3468556683658156116}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &7608982497950720620
@@ -1145,8 +1081,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.6835424, y: 1.0553756, z: 0.6932604}
-  m_Center: {x: 0.34177685, y: 0.027687848, z: 0.011628308}
+  m_Size: {x: 0.23374501, y: 0.037453875, z: 0.032156434}
+  m_Center: {x: -0.05952146, y: -0.00054495333, z: 0.0034304776}
 --- !u!114 &7543979552170167936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1160,7 +1096,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorID: 0
-  anchor: {fileID: 7836935156882572544}
+  anchor: {fileID: 0}
   rat: {fileID: 0}
 --- !u!1 &5703141862469004860
 GameObject:
