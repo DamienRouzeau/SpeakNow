@@ -8,6 +8,8 @@ public class CameraProfil : ScriptableObject
 {
     public float distanceFromPlayer;
     public float minDistanceFromPlayer;
+    public float cameraHeight;
+    public float headheightOffset;
     public float minVerticalAngle;
     public float maxVerticalAngle;
 }
