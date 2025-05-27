@@ -194,67 +194,58 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         {
             case size.little:
                 return;
+
             case size.normal:
                 particles.Play();
                 transform.localScale = littleSize;
-                cameraTransform.GetComponent<CameraFreeLook>().GetNewProfile(littleCam);
-                if (inventorySystem.itemInHand != null)
-                {
-                    inventorySystem.itemInHand.GetSmaller();
-                }
-                InteractionManager.instance.ClearInteractibleObjectList();
                 size = size.little;
+                UpdateCharacterControllerHeight();
                 break;
+
             case size.big:
                 particles.Play();
                 transform.localScale = normalSize;
-                cameraTransform.GetComponent<CameraFreeLook>().GetNewProfile(normalCam);
-                if (inventorySystem.itemInHand != null)
-                {
-                    inventorySystem.itemInHand.GetSmaller();
-                }
-                InteractionManager.instance.ClearInteractibleObjectList();
                 size = size.normal;
-                break;
-            default:
-                Debug.LogWarning("Size not found");
+                UpdateCharacterControllerHeight();
                 break;
         }
+        UpdateCharacterControllerHeight();
+        UpdateAnimatorSpeed();
+        
+        if (inventorySystem.itemInHand != null)
+            inventorySystem.itemInHand.GetSmaller();
+
+        InteractionManager.instance.ClearInteractibleObjectList();
     }
 
     public void BigPotion()
     {
         switch (size)
         {
-            case size.little:
-                particles.Play();
-                transform.localScale = normalSize;
-                cameraTransform.GetComponent<CameraFreeLook>().GetNewProfile(normalCam);
-                if (inventorySystem.itemInHand != null)
-                {
-                    inventorySystem.itemInHand.GetBigger();
-                }
-                InteractionManager.instance.ClearInteractibleObjectList();
-                size = size.normal;
-                break;
+            case size.big:
+                return;
+
             case size.normal:
                 particles.Play();
                 transform.localScale = bigSize;
-                cameraTransform.GetComponent<CameraFreeLook>().GetNewProfile(bigCam);
-                if (inventorySystem.itemInHand != null)
-                {
-                    inventorySystem.itemInHand.GetBigger();
-                }
-                InteractionManager.instance.ClearInteractibleObjectList();
                 size = size.big;
                 break;
-            case size.big:
-                return;
-            default:
-                Debug.LogWarning("Size not found");
+
+            case size.little:
+                particles.Play();
+                transform.localScale = normalSize;
+                size = size.normal;
                 break;
         }
+        UpdateCharacterControllerHeight();
+        UpdateAnimatorSpeed();
+        
+        if (inventorySystem.itemInHand != null)
+            inventorySystem.itemInHand.GetBigger();
+
+        InteractionManager.instance.ClearInteractibleObjectList();
     }
+
     private IEnumerator ActiveInteraction()
     {
         yield return new WaitForEndOfFrame();
@@ -388,7 +379,44 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
             }
         }
     }
+    
+    private void UpdateCharacterControllerHeight()
+    {
+        Vector3 center = characterController.center;
 
+        switch (size)
+        {
+            case size.little:
+                center.y = 9.7f;
+                break;
+            case size.normal:
+                center.y = 6f;
+                break;
+            case size.big:
+                center.y = 5.5f;
+                break;
+        }
+
+        characterController.center = center;
+    }
+
+    private void UpdateAnimatorSpeed()
+    {
+        switch (size)
+        {
+            case size.little:
+                animator.speed = 1.6f;
+                break;
+            case size.normal:
+                animator.speed = 1f;
+                break;
+            case size.big:
+                animator.speed = 0.6f;
+                break;
+        }
+    }
+
+    
     public void PlayStepSound()
     {
         AudioSource step = stepAudios[Random.Range(0, stepAudios.Length)];

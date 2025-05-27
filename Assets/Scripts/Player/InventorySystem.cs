@@ -53,6 +53,7 @@ public class InventorySystem : MonoBehaviour
         {
             itemInHand.transform.parent = null;
             itemInHand.rb.isKinematic = false;
+            itemInHand.rb.useGravity = true;
             itemInHand.GetComponent<Collider>().enabled = true; // Réactiver le Collider
             itemInHand = null;
         }
@@ -60,6 +61,7 @@ public class InventorySystem : MonoBehaviour
         {
             itemInHand.rb.isKinematic = false;
             itemInHand.GetComponent<Collider>().enabled = true; // Réactiver le Collider
+            itemInHand.rb.useGravity = true;
             itemInHand.rb.AddForce(new Vector3(0, throwStrength, 0) + transform.forward * throwStrength, ForceMode.Impulse);
             itemInHand.transform.parent = null;
             itemInHand = null;

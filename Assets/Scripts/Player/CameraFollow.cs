@@ -2,84 +2,91 @@ using UnityEngine;
 
 public class CameraFreeLook : MonoBehaviour
 {
-    public Transform player; // Le joueur à suivre
-    public float mouseSensitivity = 100f; // Sensibilité de la souris
-    public float distanceFromPlayer = 5f; // Distance de la caméra par rapport au joueur
-    public float minDistanceFromPlayer = 2f; // Distance minimale de la caméra par rapport au joueur
-    public float cameraHeight = 3f; // Hauteur de la caméra par rapport au joueur
-    public float headHeightOffset = 1.5f; // Décalage vertical pour viser la tête
-    public LayerMask collisionLayers; // Les couches de collision
+    [Header("Cible et sensibilité")]
+    public Transform player;
+    public float mouseSensitivity = 100f;
+
+    [Header("Base Camera Settings")]
+    public float baseDistance = 5f;
+    public float baseMinDistance = 2f;
+    public float baseCameraHeight = 3f;
+    public float baseHeadHeight = 1.5f;
+    public LayerMask collisionLayers;
+
+    [Header("FOV Dynamique")]
+    [SerializeField] private Camera mainCamera;
+    public float baseFOV = 60f;
+    public float maxFOV = 80f;
+    public float minFOV = 45f;
+
     [HideInInspector] public bool cameraFrozen = false;
 
     private float rotationX = 0f;
     private float rotationY = 0f;
+
     public float minVerticalAngle = -15f;
     public float maxVerticalAngle = 55f;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+
         float savedSensitivity = PlayerPrefs.GetFloat("sensitivity");
         if (savedSensitivity > 0.25f)
         {
-            mouseSensitivity = PlayerPrefs.GetFloat("sensitivity") * 100;
+            mouseSensitivity = savedSensitivity * 100f;
         }
         else
         {
             PlayerPrefs.SetFloat("sensitivity", 0.5f);
-            mouseSensitivity = 50;
+            mouseSensitivity = 50f;
         }
-
     }
-
-    public void GetNewProfile(CameraProfil profile)
-    {
-        distanceFromPlayer = profile.distanceFromPlayer;
-        minDistanceFromPlayer = profile.minDistanceFromPlayer;
-        headHeightOffset = profile.headheightOffset;
-        cameraHeight = profile.cameraHeight;
-        minVerticalAngle = profile.minVerticalAngle;
-        maxVerticalAngle = profile.maxVerticalAngle;
-
-    }
-
     void LateUpdate()
     {
-        
-        // Récupérer les mouvements de la souris
+        if (!player) return;
+
         if (!cameraFrozen)
         {
-            // Récupérer les mouvements de la souris
             rotationX += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             rotationY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
             rotationY = Mathf.Clamp(rotationY, minVerticalAngle, maxVerticalAngle);
         }
-        // Calculer la position et la rotation de la caméra
-        Quaternion rotation = Quaternion.Euler(rotationY, rotationX, 0);
-        Vector3 offset = rotation * new Vector3(0, cameraHeight, -distanceFromPlayer);
 
-        // Calculer la position souhaitée de la caméra sans collision
+        Vector3 scale = player.localScale;
+        float scaleFactor = scale.y / 0.15f;
+
+        float dynamicDistance = baseDistance * scaleFactor;
+        float dynamicHeight = baseCameraHeight * Mathf.Pow(scaleFactor, 1.15f);
+        float dynamicMinDistance = baseMinDistance * scaleFactor;
+        float dynamicHeadHeight = baseHeadHeight * scaleFactor;
+
+        Quaternion rotation = Quaternion.Euler(rotationY, rotationX, 0);
+        Vector3 offset = rotation * new Vector3(0, dynamicHeight, -dynamicDistance);
+
         Vector3 targetPosition = player.position + offset;
 
-        // Lancer un raycast entre la tête du joueur et la caméra pour détecter les collisions
         RaycastHit hit;
-        Vector3 rayOrigin = player.position + Vector3.up * headHeightOffset; // Position à la hauteur de la tête
+        Vector3 rayOrigin = player.position + Vector3.up * dynamicHeadHeight;
         Vector3 rayDirection = targetPosition - rayOrigin;
-        Debug.DrawLine(transform.position, player.transform.position, Color.red);
 
-        if (Physics.Raycast(rayOrigin, rayDirection, out hit, distanceFromPlayer, collisionLayers))
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, dynamicDistance, collisionLayers))
         {
-            // Ajuster la distance de la caméra pour éviter la pénétration
-            //Debug.Log(hit.collider.gameObject.name);
-            float adjustedDistance = Mathf.Max(minDistanceFromPlayer, hit.distance - 0.2f);
+            float adjustedDistance = Mathf.Max(dynamicMinDistance, hit.distance - 0.2f);
             targetPosition = player.position + (hit.point - player.position).normalized * adjustedDistance;
         }
 
-        // Appliquer la nouvelle position de la caméra
+        if (mainCamera != null)
+        {
+            float t = Mathf.InverseLerp(0.07f, 0.3f, scale.y);
+            float newFOV = Mathf.Lerp(minFOV, maxFOV, t);
+            mainCamera.fieldOfView = newFOV;
+        }
+
         transform.position = targetPosition;
 
-        // Faire en sorte que la caméra regarde vers la tête du joueur
-        Vector3 headPosition = player.position + Vector3.up * headHeightOffset;
+        Vector3 headPosition = player.position + Vector3.up * dynamicHeadHeight;
         transform.LookAt(headPosition);
     }
+
 }
