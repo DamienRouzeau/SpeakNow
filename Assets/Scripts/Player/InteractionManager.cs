@@ -75,21 +75,40 @@ public class InteractionManager : MonoBehaviour
             lastHighlightedObject = null;
         }
     }
-
     public void Interact()
     {
         if (interactionQueue.Count > 0)
         {
             interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
-            var closestAction = interactionQueue[0].action;
-            closestAction.Invoke();
-            Unsub(closestAction, interactionQueue[0].interactableTransform);
+            var closest = interactionQueue[0];
+            var collectible = closest.interactableTransform.GetComponent<CollectibleObject>();
+
+            if (collectible != null)
+            {
+                var playerSize = playerTransform.GetComponent<ThirdPersonController>().GetSize();
+
+                if (!collectible.IsRecoverable())
+                {
+                    Debug.Log("Cet objet est ancré et non récupérable.");
+                    return;
+                }
+
+                if (collectible.GetSize() != playerSize)
+                {
+                    Debug.Log("Taille du joueur incompatible avec cet objet.");
+                    return;
+                }
+            }
+
+            closest.action.Invoke();
+            Unsub(closest.action, closest.interactableTransform);
         }
         else
         {
             inventorySystem.RemoveItemInHand();
         }
     }
+
 
 
 
@@ -153,18 +172,17 @@ public class InteractionManager : MonoBehaviour
 
         interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
         Transform closestObject = null;
-        int i = 0;
-        while (i < interactionQueue.Count)
+
+        foreach (var item in interactionQueue)
         {
-            if (interactionQueue[i].interactableTransform.GetComponent<CollectibleObject>())
+            var collectible = item.interactableTransform.GetComponent<CollectibleObject>();
+            if (collectible != null &&
+                collectible.IsRecoverable() &&
+                collectible.GetSize() == playerTransform.GetComponent<ThirdPersonController>().GetSize())
             {
-                if (playerTransform.GetComponent<ThirdPersonController>().GetSize() == interactionQueue[i].interactableTransform.GetComponent<CollectibleObject>().GetSize())
-                {
-                    closestObject = interactionQueue[i].interactableTransform;
-                    i = interactionQueue.Count;
-                }
+                closestObject = collectible.transform;
+                break;
             }
-            i++;
         }
 
         // Vérifie si l'objet est celui actuellement en main et l'ignore pour le surlignage
