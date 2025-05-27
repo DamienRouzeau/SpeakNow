@@ -78,14 +78,6 @@ public class InteractionManager : MonoBehaviour
 
     public void Interact()
     {
-        if (inventorySystem.itemInHand != null)
-        {
-            if (inventorySystem.itemInHand.itemName == "LittlePotion")
-            {
-                playerTransform.GetComponent<ThirdPersonController>().LittlePotion();
-                inventorySystem.DestroyItemInHand();
-            }
-        }
         if (interactionQueue.Count > 0)
         {
             interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
@@ -98,6 +90,8 @@ public class InteractionManager : MonoBehaviour
             inventorySystem.RemoveItemInHand();
         }
     }
+
+
 
     private void Update()
     {
@@ -120,34 +114,11 @@ public class InteractionManager : MonoBehaviour
         HighlightClosestObject();
     }
 
-    public void HighlightClosestObject()
-{
-    if (interactionQueue.Count == 0)
+    public void ClearInteractibleObjectList()
     {
-        if (lastHighlightedObject != null)
+        if (lastHighlightedObject == null) return;
+        if (interactionQueue.Count == 0)
         {
-            Outline outlineToDisable = lastHighlightedObject.GetComponent<Outline>();
-            if (outlineToDisable != null)
-            {
-                outlineToDisable.outlineWidth = 0;
-                outlineToDisable.UpdateMaterialProperties();
-            }
-            lastHighlightedObject = null;
-        }
-        return;
-    }
-
-    interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
-    Transform closestObject = interactionQueue[0].interactableTransform;
-
-    // Vérifie si l'objet est celui actuellement en main et l'ignore pour le surlignage
-    if (inventorySystem != null && inventorySystem.itemInHand != null)
-    {
-
-        if (closestObject == inventorySystem.itemInHand.transform)
-        {
-
-            // Si l'objet est dans la main, on retire également tout highlight en cours
             if (lastHighlightedObject != null)
             {
                 Outline outlineToDisable = lastHighlightedObject.GetComponent<Outline>();
@@ -158,30 +129,89 @@ public class InteractionManager : MonoBehaviour
                 }
                 lastHighlightedObject = null;
             }
-
-            return; // Ignore l'objet en main pour le highlight
+            return;
         }
+        interactibleObjects.Clear();
     }
 
-    // Si un autre objet est déjà surligné, désactive son surlignage
-    if (lastHighlightedObject != null && lastHighlightedObject != closestObject)
+    public void HighlightClosestObject()
     {
-        Outline outlineToDisable = lastHighlightedObject.GetComponent<Outline>();
-        if (outlineToDisable != null)
+        if (interactionQueue.Count == 0)
         {
-            outlineToDisable.outlineWidth = 0;
-            outlineToDisable.UpdateMaterialProperties();
+            if (lastHighlightedObject != null)
+            {
+                Outline outlineToDisable = lastHighlightedObject.GetComponent<Outline>();
+                if (outlineToDisable != null)
+                {
+                    outlineToDisable.outlineWidth = 0;
+                    outlineToDisable.UpdateMaterialProperties();
+                }
+                lastHighlightedObject = null;
+            }
+            return;
+        }
+
+        interactionQueue.Sort((a, b) => a.distance.CompareTo(b.distance));
+        Transform closestObject = null;
+        int i = 0;
+        while (i < interactionQueue.Count)
+        {
+            if (interactionQueue[i].interactableTransform.GetComponent<CollectibleObject>())
+            {
+                if (playerTransform.GetComponent<ThirdPersonController>().GetSize() == interactionQueue[i].interactableTransform.GetComponent<CollectibleObject>().GetSize())
+                {
+                    closestObject = interactionQueue[i].interactableTransform;
+                    i = interactionQueue.Count;
+                }
+            }
+            i++;
+        }
+
+        // Vérifie si l'objet est celui actuellement en main et l'ignore pour le surlignage
+        if (inventorySystem != null && inventorySystem.itemInHand != null)
+        {
+
+            if (closestObject == inventorySystem.itemInHand.transform)
+            {
+
+                // Si l'objet est dans la main, on retire également tout highlight en cours
+                if (lastHighlightedObject != null)
+                {
+                    Outline outlineToDisable = lastHighlightedObject.GetComponent<Outline>();
+                    if (outlineToDisable != null)
+                    {
+                        outlineToDisable.outlineWidth = 0;
+                        outlineToDisable.UpdateMaterialProperties();
+                    }
+                    lastHighlightedObject = null;
+                }
+
+                return; // Ignore l'objet en main pour le highlight
+            }
+        }
+
+        // Si un autre objet est déjà surligné, désactive son surlignage
+        if (lastHighlightedObject != null && lastHighlightedObject != closestObject)
+        {
+            Outline outlineToDisable = lastHighlightedObject.GetComponent<Outline>();
+            if (outlineToDisable != null)
+            {
+                outlineToDisable.outlineWidth = 0;
+                outlineToDisable.UpdateMaterialProperties();
+            }
+        }
+
+        // Active le surlignage pour l'objet le plus proche s'il n'est pas dans la main
+        if (closestObject != null)
+        {
+            Outline outlineToEnable = closestObject.GetComponent<Outline>();
+            if (outlineToEnable != null)
+            {
+                outlineToEnable.outlineWidth = highlightWidth;
+                outlineToEnable.UpdateMaterialProperties();
+            }
+
+            lastHighlightedObject = closestObject;
         }
     }
-
-    // Active le surlignage pour l'objet le plus proche s'il n'est pas dans la main
-    Outline outlineToEnable = closestObject.GetComponent<Outline>();
-    if (outlineToEnable != null)
-    {
-        outlineToEnable.outlineWidth = highlightWidth;
-        outlineToEnable.UpdateMaterialProperties();
-    }
-
-    lastHighlightedObject = closestObject;
-}
 }

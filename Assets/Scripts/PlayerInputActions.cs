@@ -71,6 +71,42 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NoteBook"",
+                    ""type"": ""Button"",
+                    ""id"": ""6c2f16fa-8bfc-4b2a-883e-cc8769afb981"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Capacity1"",
+                    ""type"": ""Button"",
+                    ""id"": ""4ecd7aa6-c77f-413c-997e-b59ca661814e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Capacity2"",
+                    ""type"": ""Button"",
+                    ""id"": ""bc84f48f-4180-429d-b6fd-663e29b1f394"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""e9fb1386-756d-461c-bd2b-f8e932102578"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -172,6 +208,50 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""02df6c33-5a68-4a87-8806-7e52f99383e0"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NoteBook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f9a6c3e3-3d57-4dc3-b96e-f116a7f9cbb4"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Capacity1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""247c979f-a2f1-4ee4-8cc0-fb55ae9c04bf"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Capacity2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce5d3321-8dd0-47e4-a0da-66d5627a78a9"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +265,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PlayerControls_Jump = m_PlayerControls.FindAction("Jump", throwIfNotFound: true);
         m_PlayerControls_Run = m_PlayerControls.FindAction("Run", throwIfNotFound: true);
         m_PlayerControls_Interact = m_PlayerControls.FindAction("Interact", throwIfNotFound: true);
+        m_PlayerControls_NoteBook = m_PlayerControls.FindAction("NoteBook", throwIfNotFound: true);
+        m_PlayerControls_Capacity1 = m_PlayerControls.FindAction("Capacity1", throwIfNotFound: true);
+        m_PlayerControls_Capacity2 = m_PlayerControls.FindAction("Capacity2", throwIfNotFound: true);
+        m_PlayerControls_Scroll = m_PlayerControls.FindAction("Scroll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -251,6 +335,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerControls_Jump;
     private readonly InputAction m_PlayerControls_Run;
     private readonly InputAction m_PlayerControls_Interact;
+    private readonly InputAction m_PlayerControls_NoteBook;
+    private readonly InputAction m_PlayerControls_Capacity1;
+    private readonly InputAction m_PlayerControls_Capacity2;
+    private readonly InputAction m_PlayerControls_Scroll;
     public struct PlayerControlsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -260,6 +348,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_PlayerControls_Jump;
         public InputAction @Run => m_Wrapper.m_PlayerControls_Run;
         public InputAction @Interact => m_Wrapper.m_PlayerControls_Interact;
+        public InputAction @NoteBook => m_Wrapper.m_PlayerControls_NoteBook;
+        public InputAction @Capacity1 => m_Wrapper.m_PlayerControls_Capacity1;
+        public InputAction @Capacity2 => m_Wrapper.m_PlayerControls_Capacity2;
+        public InputAction @Scroll => m_Wrapper.m_PlayerControls_Scroll;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -284,6 +376,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @NoteBook.started += instance.OnNoteBook;
+            @NoteBook.performed += instance.OnNoteBook;
+            @NoteBook.canceled += instance.OnNoteBook;
+            @Capacity1.started += instance.OnCapacity1;
+            @Capacity1.performed += instance.OnCapacity1;
+            @Capacity1.canceled += instance.OnCapacity1;
+            @Capacity2.started += instance.OnCapacity2;
+            @Capacity2.performed += instance.OnCapacity2;
+            @Capacity2.canceled += instance.OnCapacity2;
+            @Scroll.started += instance.OnScroll;
+            @Scroll.performed += instance.OnScroll;
+            @Scroll.canceled += instance.OnScroll;
         }
 
         private void UnregisterCallbacks(IPlayerControlsActions instance)
@@ -303,6 +407,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @NoteBook.started -= instance.OnNoteBook;
+            @NoteBook.performed -= instance.OnNoteBook;
+            @NoteBook.canceled -= instance.OnNoteBook;
+            @Capacity1.started -= instance.OnCapacity1;
+            @Capacity1.performed -= instance.OnCapacity1;
+            @Capacity1.canceled -= instance.OnCapacity1;
+            @Capacity2.started -= instance.OnCapacity2;
+            @Capacity2.performed -= instance.OnCapacity2;
+            @Capacity2.canceled -= instance.OnCapacity2;
+            @Scroll.started -= instance.OnScroll;
+            @Scroll.performed -= instance.OnScroll;
+            @Scroll.canceled -= instance.OnScroll;
         }
 
         public void RemoveCallbacks(IPlayerControlsActions instance)
@@ -327,5 +443,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnNoteBook(InputAction.CallbackContext context);
+        void OnCapacity1(InputAction.CallbackContext context);
+        void OnCapacity2(InputAction.CallbackContext context);
+        void OnScroll(InputAction.CallbackContext context);
     }
 }

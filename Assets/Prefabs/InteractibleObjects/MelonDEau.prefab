@@ -121,6 +121,7 @@ MonoBehaviour:
   itemName: 
   isStackable: 0
   rb: {fileID: 6141796075729574748}
+  objectSize: 1
 --- !u!114 &4505167346943841675
 MonoBehaviour:
   m_ObjectHideFlags: 0

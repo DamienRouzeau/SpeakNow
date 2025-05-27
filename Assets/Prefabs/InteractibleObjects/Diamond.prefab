@@ -183,3 +183,4 @@ MonoBehaviour:
   itemName: Diamond
   isStackable: 0
   rb: {fileID: 7899592232738444763}
+  objectSize: 1

@@ -1,4 +1,7 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
+
 
 public class CollectibleObject : MonoBehaviour
 {
@@ -9,6 +12,7 @@ public class CollectibleObject : MonoBehaviour
     [SerializeField]
     private bool isStackable = false;
     public Rigidbody rb;
+    [SerializeField] private size objectSize = size.normal;
 
     private void Start()
     {
@@ -33,11 +37,16 @@ public class CollectibleObject : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
+            player = other.gameObject.transform.parent.gameObject;
+            if (player.GetComponent<ThirdPersonController>().GetSize() != objectSize)
+            {
+                player = null;
+                return;
+            }
             interactionManager = InteractionManager.instance;
             if (interactionManager != null)
             {
                 interactionManager.Sub(Collect, transform);
-                player = other.gameObject.transform.parent.gameObject;
             }
             else
             {
@@ -106,5 +115,28 @@ public class CollectibleObject : MonoBehaviour
             Debug.LogError("InventorySystem non trouvé sur le joueur.");
         }
     }
+    
 
+    #region Size
+    public void GetBigger()
+    {
+        if(objectSize != size.big)
+        {
+            objectSize++;
+        }
+    }
+
+    public void GetSmaller()
+    {
+        if (objectSize != size.little)
+        {
+            objectSize--;
+        }
+    }
+    #endregion
+
+
+    #region Getter
+    public size GetSize() { return objectSize; }
+    #endregion
 }

@@ -200,6 +200,7 @@ MonoBehaviour:
   itemName: Corn
   isStackable: 0
   rb: {fileID: 276119127053152937}
+  objectSize: 1
 --- !u!54 &276119127053152937
 Rigidbody:
   m_ObjectHideFlags: 0
