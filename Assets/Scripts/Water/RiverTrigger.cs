@@ -11,6 +11,8 @@ public class RiverTrigger : MonoBehaviour
     public float sinkDuration = 1.5f;
     [Header("Immersion Settings")]
     public float immersionDepth = 0.5f;
+    [Header("Rotation Dramatique")]
+    public float rotationSpeed = 360f;
 
     bool   isFollowing;
     float  t;
@@ -30,14 +32,13 @@ public class RiverTrigger : MonoBehaviour
     {
         isFollowing = true;
 
-        // Désactive juste le CharacterController
         if (player.TryGetComponent(out CharacterController cc)) cc.enabled = false;
 
-        // Joue l’animation de saut pendant la glissade
         if (controller.animator != null)
         {
-            controller.animator.SetTrigger("Jumping");
+            controller.animator.SetBool("IsSpline", true);
         }
+
 
         t = FindClosestT(spline, player.position);
         Vector3 splineStart = spline.EvaluatePosition(t);
@@ -59,10 +60,16 @@ public class RiverTrigger : MonoBehaviour
             Vector3 pos = spline.EvaluatePosition(t);
             pos.y -= immersionDepth;
             player.position = pos;
+
+            player.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
             t += Time.deltaTime * followSpeed;
             yield return null;
         }
 
+        if (controller.animator != null)
+        {
+            controller.animator.SetBool("IsSpline", false);
+        }
         if (cc != null) cc.enabled = true;
         controller.enabled = true;
         isFollowing = false;
