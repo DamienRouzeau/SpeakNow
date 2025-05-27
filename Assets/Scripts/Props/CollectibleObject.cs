@@ -13,10 +13,15 @@ public class CollectibleObject : MonoBehaviour
     private bool isStackable = false;
     public Rigidbody rb;
     [SerializeField] private size objectSize = size.normal;
-
+    public Anchor currentAnchor;
     private void Start()
     {
         interactionManager = InteractionManager.instance;
+    }
+    
+    public bool IsRecoverable()
+    {
+        return currentAnchor == null || currentAnchor.isRecoverable;
     }
 
     private void FixedUpdate()
@@ -97,6 +102,11 @@ public class CollectibleObject : MonoBehaviour
             }
             else
             {
+                if (currentAnchor != null)
+                {
+                    currentAnchor.SetOccupied(false);
+                    currentAnchor = null;
+                }
                 inventory.AddItemInHand(this);
             }
 

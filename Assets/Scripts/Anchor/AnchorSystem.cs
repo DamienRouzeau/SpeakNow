@@ -14,6 +14,10 @@ public class Anchor : MonoBehaviour
 
     private bool isOccupied = false;
 
+    [Header("Paramètres d’interaction")]
+    [Tooltip("L'objet ancré peut-il être ramassé après coup ?")]
+    public bool isRecoverable = false;
+
     private void OnTriggerEnter(Collider other)
     {
         if (isOccupied) return;
@@ -21,7 +25,7 @@ public class Anchor : MonoBehaviour
         CollectibleObject collectible = other.GetComponent<CollectibleObject>();
         if (collectible == null) return;
 
-        if (InventorySystem.instance.itemInHand == collectible) return;
+        if (InventorySystem.instance.itemInHand == collectible && collectible.transform.parent != null) return;
 
         if (collectible.GetItemName() != expectedItemName) return;
         if (collectible.GetSize() != acceptedSize) return;
@@ -29,8 +33,14 @@ public class Anchor : MonoBehaviour
         AnchorObject(collectible);
     }
 
+    public void SetOccupied(bool state)
+    {
+        isOccupied = state;
+    }
+
     private void AnchorObject(CollectibleObject obj)
     {
+        obj.currentAnchor = this;
         obj.rb.isKinematic = true;
         obj.rb.useGravity = false;
         obj.transform.SetParent(transform);
@@ -38,10 +48,14 @@ public class Anchor : MonoBehaviour
         obj.transform.localRotation = Quaternion.identity;
 
         Collider col = obj.GetComponent<Collider>();
-        if (col != null) col.enabled = false;
+        if (col != null)
+        {
+            col.enabled = true;
+        }
 
         isOccupied = true;
 
-        Debug.Log($"✅ Objet '{obj.GetItemName()}' (taille : {obj.GetSize()}) ancré sur {name}");
+        Debug.Log($" Objet '{obj.GetItemName()}' (taille : {obj.GetSize()}) ancré sur {name}");
     }
+
 }
