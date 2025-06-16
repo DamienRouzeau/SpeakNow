@@ -288,7 +288,18 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         if (context.performed && isGrounded)
         {
             jumpAudio.volume = AudioManager.instance.GetVolume();
-            jumpAudio.pitch = Random.Range(0.92f, 1.07f);
+            switch (size)
+            {
+                case size.little:
+                    jumpAudio.pitch = Random.Range(1.25f, 1.47f);
+                    break;
+                case size.normal:
+                    jumpAudio.pitch = Random.Range(0.92f, 1.07f);
+                    break;
+                case size.big:
+                    jumpAudio.pitch = Random.Range(0.42f, 0.77f);
+                    break;
+            }
             jumpAudio.Play();
             isJumping = true;
             animator.SetTrigger("Jumping");

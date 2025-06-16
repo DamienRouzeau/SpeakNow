@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Anchor : MonoBehaviour
+public class AnchorSystem : MonoBehaviour
 {
     [Header("Critères d’acceptation")]
     [Tooltip("Nom de l’objet attendu (ex : 'Diamant')")]
@@ -27,9 +27,10 @@ public class Anchor : MonoBehaviour
 
         if (InventorySystem.instance.itemInHand == collectible && collectible.transform.parent != null) return;
 
-        if (collectible.GetItemName() != expectedItemName) return;
-        if (collectible.GetSize() != acceptedSize) return;
+        if (expectedItemName != "all")
+            if (collectible.GetItemName() != expectedItemName) return;
 
+        if (collectible.GetSize() != acceptedSize) return;
         AnchorObject(collectible);
     }
 
@@ -57,5 +58,6 @@ public class Anchor : MonoBehaviour
 
         Debug.Log($" Objet '{obj.GetItemName()}' (taille : {obj.GetSize()}) ancré sur {name}");
     }
+    public bool GetOccupied() { return isOccupied; }
 
 }
