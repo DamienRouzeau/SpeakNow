@@ -70,10 +70,12 @@ public class CameraFreeLook : MonoBehaviour
         Vector3 rayOrigin = player.position + Vector3.up * dynamicHeadHeight;
         Vector3 rayDirection = targetPosition - rayOrigin;
 
-        if (Physics.Raycast(rayOrigin, rayDirection, out hit, dynamicDistance, collisionLayers))
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, dynamicDistance, collisionLayers, QueryTriggerInteraction.Ignore))
         {
             float adjustedDistance = Mathf.Max(dynamicMinDistance, hit.distance - 0.2f);
             targetPosition = player.position + (hit.point - player.position).normalized * adjustedDistance;
+
+            Debug.Log($"[CameraFreeLook] Collision détectée avec : {hit.collider.name} | Distance = {hit.distance:F2}");
         }
 
         if (mainCamera != null)
