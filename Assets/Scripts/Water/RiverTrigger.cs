@@ -34,6 +34,18 @@ public class RiverTrigger : MonoBehaviour
         player = controller.transform;
         StartCoroutine(SinkThenFollow(controller));
     }
+    
+    float GetImmersionOffset(ThirdPersonController ctrl)
+    {
+        // Variante 1 : au feeling, via l’énum
+        switch (ctrl.GetSize())
+        {
+            case size.little:  return immersionDepth * 0.3f;
+            case size.normal:  return immersionDepth;
+            case size.big:     return immersionDepth * 1.4f;
+        }
+        return immersionDepth;
+    }
 
     IEnumerator SinkThenFollow(ThirdPersonController controller)
     {
@@ -44,9 +56,11 @@ public class RiverTrigger : MonoBehaviour
         if (controller.animator != null)
             controller.animator.SetBool("IsSpline", true);
 
+        float immersionOffset = GetImmersionOffset(controller); // ✅
+
         t = FindClosestT(spline, player.position);
         Vector3 splineStart = spline.EvaluatePosition(t);
-        splineStart.y -= 0.8f;
+        splineStart.y -= immersionOffset; // ✅
 
         Vector3 start = player.position;
         float elapsed = 0f;
@@ -63,7 +77,7 @@ public class RiverTrigger : MonoBehaviour
         while (t < 1f)
         {
             Vector3 pos = spline.EvaluatePosition(t);
-            pos.y -= immersionDepth;
+            pos.y -= immersionOffset; // ✅
             player.position = pos;
 
             player.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
@@ -71,7 +85,7 @@ public class RiverTrigger : MonoBehaviour
             yield return null;
         }
 
-        // Sortie à la fin si point défini
+        // Sortie à la fin
         if (exitPoint != null)
         {
             Vector3 from = player.position;
@@ -94,6 +108,7 @@ public class RiverTrigger : MonoBehaviour
         controller.enabled = true;
         isFollowing = false;
     }
+
 
     float FindClosestT(SplineContainer container, Vector3 worldPos, int resolution = 100)
     {

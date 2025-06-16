@@ -463,7 +463,7 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         switch (size)
         {
             case size.little:
-                center.y = 9.7f;
+                center.y = 6.76f;
                 break;
             case size.normal:
                 center.y = 6f;
