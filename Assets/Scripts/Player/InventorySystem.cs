@@ -53,6 +53,7 @@ public class InventorySystem : MonoBehaviour
         {
             itemInHand.transform.parent = null;
             itemInHand.rb.isKinematic = false;
+            itemInHand.rb.useGravity = true;
             itemInHand.GetComponent<Collider>().enabled = true; // Réactiver le Collider
             itemInHand = null;
         }
@@ -60,6 +61,7 @@ public class InventorySystem : MonoBehaviour
         {
             itemInHand.rb.isKinematic = false;
             itemInHand.GetComponent<Collider>().enabled = true; // Réactiver le Collider
+            itemInHand.rb.useGravity = true;
             itemInHand.rb.AddForce(new Vector3(0, throwStrength, 0) + transform.forward * throwStrength, ForceMode.Impulse);
             itemInHand.transform.parent = null;
             itemInHand = null;
@@ -68,6 +70,7 @@ public class InventorySystem : MonoBehaviour
 
         item.GetComponent<Collider>().enabled = false; // Désactiver le Collider lorsqu'il est en main
         item.transform.parent = hand.transform;
+        item.currentAnchor = null;
         itemInHand = item;
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.Euler(180, 0, 0);
@@ -84,7 +87,7 @@ public class InventorySystem : MonoBehaviour
             itemInHand.rb.useGravity = true;
             itemInHand.transform.parent = null;
             itemInHand.transform.position = throwPosition.position;
-            itemInHand.GetComponent<Collider>().enabled = true; // Réactiver le Collider
+            itemInHand.GetComponent<Collider>().enabled = true;
             itemInHand.rb.AddForce(new Vector3(0, throwStrength, 0) + transform.forward * throwStrength, ForceMode.Impulse);
             audio.volume = AudioManager.instance.GetVolume();
             audio.Play();
