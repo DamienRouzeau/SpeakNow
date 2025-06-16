@@ -13,7 +13,7 @@ public class CollectibleObject : MonoBehaviour
     private bool isStackable = false;
     public Rigidbody rb;
     [SerializeField] private size objectSize = size.normal;
-    public Anchor currentAnchor;
+    public AnchorSystem currentAnchor;
     private void Start()
     {
         interactionManager = InteractionManager.instance;
@@ -126,6 +126,10 @@ public class CollectibleObject : MonoBehaviour
         }
     }
     
+    public void SetSize(size _size)
+    {
+        objectSize = _size;
+    }
 
     #region Size
     public void GetBigger()
