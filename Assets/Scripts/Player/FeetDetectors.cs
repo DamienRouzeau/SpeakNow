@@ -1,16 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FeetDetectors : MonoBehaviour
 {
+    [SerializeField] private LayerMask groundMask;
+
     private int surfaceCollisionCounter = 0;
     private bool isGrounded = false;
 
-    public void Start()
+    private void Start()
     {
         Collider collider = GetComponent<Collider>();
-        if(collider != null)
+        if (collider != null)
         {
             collider.enabled = true;
         }
@@ -22,21 +22,19 @@ public class FeetDetectors : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (((1 << other.gameObject.layer) & groundMask) == 0) return;
+
         surfaceCollisionCounter++;
         isGrounded = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        surfaceCollisionCounter--;
-        if(surfaceCollisionCounter <= 0)
-        {
-            surfaceCollisionCounter = 0;
-            isGrounded = false;
-        }
+        if (((1 << other.gameObject.layer) & groundMask) == 0) return;
+
+        surfaceCollisionCounter = Mathf.Max(0, surfaceCollisionCounter - 1);
+        isGrounded = surfaceCollisionCounter > 0;
     }
-
-
 
     public bool GetGrounded()
     {
@@ -45,6 +43,9 @@ public class FeetDetectors : MonoBehaviour
 
     public void ResetCounter()
     {
+        surfaceCollisionCounter = 0;
+        isGrounded = false;
+
         Collider collider = GetComponent<Collider>();
         if (collider != null)
         {
@@ -54,7 +55,5 @@ public class FeetDetectors : MonoBehaviour
         {
             Debug.LogWarning("Feet collider not found");
         }
-        surfaceCollisionCounter = 0;
-        isGrounded = false;
     }
 }

@@ -26,6 +26,12 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private Vector2 lookInput;
     private bool isRunning;
     private bool isJumping = false;
+    [SerializeField] private float coyoteTime = 0.15f;
+    [SerializeField] private float jumpBufferTime = 0.15f;
+    private float coyoteTimer;
+    private float jumpBufferTimer;
+    private bool hasJumped = false;
+
     private Vector3 velocity;
     private bool isGrounded;
     [SerializeField] private Camera camera;
@@ -103,9 +109,34 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     {
         if (isRagdoll) return;
 
+        bool wasGrounded = isGrounded;
         isGrounded = feet.GetGrounded();
-        if (isGrounded && velocity.y < 0)
+
+        if (isGrounded && velocity.y <= 0f)
+        {
+            if (hasJumped)
+
+            hasJumped = false;
             velocity.y = -2f;
+        }
+
+
+        if (isGrounded)
+        {
+            coyoteTimer = coyoteTime;
+        }
+        else
+        {
+            coyoteTimer -= Time.deltaTime;
+        }
+
+
+        jumpBufferTimer -= Time.deltaTime;
+
+        if (jumpBufferTimer > 0f && coyoteTimer > 0f && !hasJumped)
+        {
+            PerformJump();
+        }
 
         if (!isJumping)
         {
@@ -285,28 +316,49 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed && isGrounded)
+        if (context.performed)
         {
-            jumpAudio.volume = AudioManager.instance.GetVolume();
-            switch (size)
+            Debug.Log($"OnJump - Attempt to jump: isGrounded={isGrounded}, hasJumped={hasJumped}");
+
+            if (!isGrounded && hasJumped)
             {
-                case size.little:
-                    jumpAudio.pitch = Random.Range(1.25f, 1.47f);
-                    break;
-                case size.normal:
-                    jumpAudio.pitch = Random.Range(0.92f, 1.07f);
-                    break;
-                case size.big:
-                    jumpAudio.pitch = Random.Range(0.42f, 0.77f);
-                    break;
+                return;
             }
-            jumpAudio.Play();
-            isJumping = true;
-            animator.SetTrigger("Jumping");
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
-            isJumping = false;
+
+            jumpBufferTimer = jumpBufferTime;
         }
     }
+    
+    private void PerformJump()
+    {
+        if (hasJumped || isGrounded == false)
+        {
+            return;
+        }
+
+        hasJumped = true;
+        jumpBufferTimer = 0f;
+        coyoteTimer = 0f;
+
+        velocity.y = Mathf.Sqrt(jumpForce * -2f * Physics.gravity.y);
+
+        if (jumpAudio != null)
+        {
+            jumpAudio.volume = AudioManager.instance.GetVolume();
+
+            switch (size)
+            {
+                case size.little:  jumpAudio.pitch = Random.Range(2.5f, 3.0f); break;
+                case size.normal:  jumpAudio.pitch = Random.Range(0.92f, 1.07f); break;
+                case size.big:     jumpAudio.pitch = Random.Range(0.42f, 0.77f); break;
+            }
+
+            jumpAudio.Play();
+        }
+
+        animator.SetTrigger("Jumping");
+    }
+
 
     public void OnRun(InputAction.CallbackContext context)
     {
