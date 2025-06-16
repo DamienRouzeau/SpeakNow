@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,13 +5,16 @@ using UnityEngine;
 public class repairCar : MonoBehaviour
 {
     private bool isAroundCar;
-    [SerializeField] private bool isCarBroken = true;
     private GameObject player;
     private InteractionManager interactionManager;
+
     public ParticleSystem smoke;
     public ParticleSystem spark;
     public Light[] headlights;
-    
+
+    private bool smokeFixed = false;
+    private bool lightsFixed = false;
+
     private void Start()
     {
         interactionManager = InteractionManager.instance;
@@ -28,7 +30,7 @@ public class repairCar : MonoBehaviour
     {
         if (other.CompareTag("InteractionArea"))
         {
-            player = other.gameObject.transform.parent.gameObject;
+            player = other.transform.parent.gameObject;
 
             if (player == null)
             {
@@ -47,7 +49,6 @@ public class repairCar : MonoBehaviour
         {
             interactionManager.Unsub(RepairCar, transform);
             isAroundCar = false;
-            Debug.Log("Player exited the car interaction zone.");
             player = null;
         }
     }
@@ -55,60 +56,64 @@ public class repairCar : MonoBehaviour
 
     private void RepairCar()
     {
-        if (isAroundCar && Input.GetKeyDown(KeyCode.E))
+        if (!isAroundCar || !Input.GetKeyDown(KeyCode.E)) return;
+
+        InventorySystem inventory = player.GetComponent<InventorySystem>();
+        if (inventory == null) return;
+
+        CollectibleObject itemInHand = inventory.itemInHand;
+
+        if (itemInHand == null)
         {
-            if (isCarBroken)
-            {
-                InventorySystem inventory = player.GetComponent<InventorySystem>();
+            return;
+        }
 
-                if (inventory == null)
+        switch (itemInHand.itemName.ToLower())
+        {
+            case "wrench":
+                if (!smokeFixed)
                 {
-                    return;
-                }
-
-                CollectibleObject itemInHand = inventory.itemInHand;
-
-                if (itemInHand != null && itemInHand.itemName == "wrench")
-                {
+                    smokeFixed = true;
                     inventory.RemoveItemInHand();
-                    isCarBroken = false;
                     smoke.Stop();
-                    spark.Stop();
-                    foreach (var headlight in headlights)
-                    {
-                        if (headlight == null) continue; // Vérifie si le phare est nul avant d'y accéder
-
-                        // Réinitialise l'intensité à 0
-                        headlight.intensity = 0f;
-
-                        // Vérifie si un Animator est attaché, puis arrête l'animation
-                        if (headlight.TryGetComponent<Animator>(out var animator))
-                        {
-                            animator.StopPlayback(); // Utilise une méthode appropriée pour arrêter l'Animator
-                        }
-                        headlight.gameObject.SetActive(true);
-                        // Lance la coroutine pour ajuster l'intensité de la lumière
-                        StartCoroutine(SmoothLightIntensity(headlight, 10f, 1f));
-                    }
-
                     Destroy(itemInHand.gameObject);
                 }
-                else if (itemInHand != null)
+                break;
+
+            case "headlight":
+                if (!lightsFixed)
                 {
-                    itemInHand.gameObject.SetActive(false);
+                    lightsFixed = true;
+                    spark.Stop();
+                    inventory.RemoveItemInHand();
+                    foreach (var headlight in headlights)
+                    {
+                        if (headlight == null) continue;
+
+                        if (headlight.TryGetComponent<Animator>(out var animator))
+                        {
+                            animator.enabled = false;
+                        }
+
+                        headlight.intensity = 0f;
+                        headlight.gameObject.SetActive(true);
+                        StartCoroutine(SmoothLightIntensity(headlight, 10f, 1f));
+                    }
+                    Destroy(itemInHand.gameObject);
                 }
-                else
-                {
-                    Debug.Log("No item in hand to repair the car.");
-                }
-            }
-            else
-            {
-                Debug.Log("Car is already repaired.");
-            }
+                break;
+
+            default:
+                itemInHand.gameObject.SetActive(false);
+                break;
+        }
+
+        if (smokeFixed && lightsFixed)
+        {
+            Debug.Log("Car fully repaired!");
         }
     }
-    
+
     private IEnumerator SmoothLightIntensity(Light light, float targetIntensity, float duration)
     {
         float startIntensity = light.intensity;
