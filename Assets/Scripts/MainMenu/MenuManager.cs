@@ -28,6 +28,11 @@ public class MenuManager : MonoBehaviour
     [SerializeField]
     private GameObject creditsInterface;
 
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+    }
 
     public void OnStartNewGame()
     {
@@ -38,7 +43,8 @@ public class MenuManager : MonoBehaviour
             PlayerPrefs.Save();
         }
         float test = PlayerPrefs.GetFloat("volume");
-
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         StartCoroutine(StartGame());
     }
 
