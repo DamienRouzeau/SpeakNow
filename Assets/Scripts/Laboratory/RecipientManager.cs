@@ -10,6 +10,8 @@ public class RecipientManager : MonoBehaviour
     private InteractionManager interactionManager;
     public int carrotNB = 2;
     public int gemNB = 4;
+    private int initCarrotNB;
+    private int initGemNB;
     [SerializeField]
     private float throwStrenght = 2;
     private bool isGoodIngredient;
@@ -31,12 +33,11 @@ public class RecipientManager : MonoBehaviour
     private List<CollectibleObject> ingredientsList = new List<CollectibleObject>();
     public bool potionIsCreate = false;
 
-
-
-
     private void Start()
     {
         interactionManager = InteractionManager.instance;
+        initCarrotNB = carrotNB;
+        initGemNB = gemNB;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -152,6 +153,8 @@ public class RecipientManager : MonoBehaviour
         ingredient.gameObject.SetActive(true);
         ingredient.transform.position = transform.position - (Vector3.right * 1f);
         ingredient.rb.AddForce(new Vector3(0, throwStrenght, 0) - new Vector3(1, 0, 0) * throwStrenght, ForceMode.Impulse);
+        carrotNB = initCarrotNB;
+        gemNB = initGemNB;
     }
 
     public void ThrowPotion()

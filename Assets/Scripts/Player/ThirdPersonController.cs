@@ -107,6 +107,12 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
 
     void Update()
     {
+        if (transform.position.y < -50)
+        {
+
+            transform.position = new Vector3(transform.position.x, 100, transform.position.z);
+            Debug.Log("Replace player on Y : 100");
+        }
         if (isRagdoll) return;
 
         bool wasGrounded = isGrounded;
@@ -459,11 +465,13 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
     private void UpdateCharacterControllerHeight()
     {
         Vector3 center = characterController.center;
+        //float offset = characterController.stepOffset;
+        //characterController.stepOffset = 0;
 
         switch (size)
         {
             case size.little:
-                center.y = 6.76f;
+                center.y = 8.5f;
                 break;
             case size.normal:
                 center.y = 6f;
@@ -474,6 +482,8 @@ public class ThirdPersonController : MonoBehaviour, PlayerInputActions.IPlayerCo
         }
 
         characterController.center = center;
+        //characterController.stepOffset = offset;
+
     }
 
     private void UpdateAnimatorSpeed()

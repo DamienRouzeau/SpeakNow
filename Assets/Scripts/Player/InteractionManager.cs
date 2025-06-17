@@ -176,11 +176,24 @@ public class InteractionManager : MonoBehaviour
         foreach (var item in interactionQueue)
         {
             var collectible = item.interactableTransform.GetComponent<CollectibleObject>();
+            var recip = item.interactableTransform.GetComponent<RecipientManager>();
+            var button = item.interactableTransform.GetComponent<ButtonPotion>();
+
             if (collectible != null &&
                 collectible.IsRecoverable() &&
                 collectible.GetSize() == playerTransform.GetComponent<ThirdPersonController>().GetSize())
             {
                 closestObject = collectible.transform;
+                break;
+            }
+            else if(recip != null)
+            {
+                closestObject = recip.transform;
+                break;
+            }
+            else if (button != null)
+            {
+                closestObject = button.transform;
                 break;
             }
         }

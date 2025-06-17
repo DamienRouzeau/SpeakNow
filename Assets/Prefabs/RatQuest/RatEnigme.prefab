@@ -235,7 +235,7 @@ MonoBehaviour:
   anchor:
   - {fileID: 7396532732847696450}
   - {fileID: 6531699188276425496}
-  wrench: {fileID: 5729611199653275543}
+  wrench: {fileID: 5752804459352921082}
   particles: {fileID: 6613954762366272691}
 --- !u!195 &532168141123980601
 NavMeshAgent:
@@ -306,9 +306,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4556276457746108, guid: 7c4f694f8a877aa46adee3fb61ec7a64, type: 3}
   m_PrefabInstance: {fileID: 2324314197935900901}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &5729611199653275543 stripped
-MeshCollider:
-  m_CorrespondingSourceObject: {fileID: 8053056761918336882, guid: 7c4f694f8a877aa46adee3fb61ec7a64, type: 3}
+--- !u!65 &5752804459352921082 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 8041052201929300767, guid: 7c4f694f8a877aa46adee3fb61ec7a64, type: 3}
   m_PrefabInstance: {fileID: 2324314197935900901}
   m_PrefabAsset: {fileID: 0}
 --- !u!198 &6613954762366272691 stripped
@@ -714,6 +714,7 @@ MonoBehaviour:
   acceptedSize: 2
   anchoredLocalOffset: {x: 0, y: 0, z: 0}
   isRecoverable: 1
+  colliderToDisableOnSet: {fileID: 0}
 --- !u!1001 &8740880978376685752
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -799,6 +800,7 @@ MonoBehaviour:
   acceptedSize: 2
   anchoredLocalOffset: {x: 0, y: 0, z: 0}
   isRecoverable: 1
+  colliderToDisableOnSet: {fileID: 0}
 --- !u!4 &1394326496267712574 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7643871356130410630, guid: 19bcae54a7fda0e4798dfe99021d5626, type: 3}

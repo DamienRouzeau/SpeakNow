@@ -1,19 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class repairCar : MonoBehaviour
 {
     private bool isAroundCar;
     private GameObject player;
+    [SerializeField] Animator playerAnim;
     private InteractionManager interactionManager;
 
     public ParticleSystem smoke;
     public ParticleSystem spark;
+    [SerializeField] private Animator anim;
     public Light[] headlights;
 
     private bool smokeFixed = false;
     private bool lightsFixed = false;
+    private bool extractDone = false;
+
 
     private void Start()
     {
@@ -103,15 +109,42 @@ public class repairCar : MonoBehaviour
                 }
                 break;
 
+            case "shovel":
+                if (!extractDone)
+                {
+                    extractDone = true;
+                    inventory.RemoveItemInHand();
+                    anim.SetTrigger("extract");
+                    Destroy(itemInHand.gameObject);
+                }
+                break;
+
             default:
                 itemInHand.gameObject.SetActive(false);
                 break;
         }
+        CheckAllRepair();
 
         if (smokeFixed && lightsFixed)
         {
             Debug.Log("Car fully repaired!");
         }
+    }
+
+    private void CheckAllRepair()
+    {
+        if(extractDone && lightsFixed && smokeFixed)
+        {
+            anim.SetTrigger("Final");
+            playerAnim.SetBool("Final", true);
+            StartCoroutine(BackToMenu());
+        }
+    }
+
+    private IEnumerator BackToMenu()
+    {
+        yield return new WaitForSeconds(2.8f);
+        SceneManager.LoadScene(0);
     }
 
     private IEnumerator SmoothLightIntensity(Light light, float targetIntensity, float duration)

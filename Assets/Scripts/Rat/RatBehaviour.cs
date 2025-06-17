@@ -15,7 +15,7 @@ public class RatBehaviour : MonoBehaviour
     private bool blocked = false;
     private int doorLocked = 0;
     [SerializeField] private List<AnchorSystem> anchor = new List<AnchorSystem>();
-    [SerializeField] private MeshCollider wrench;
+    [SerializeField] private BoxCollider wrench;
     [SerializeField] ParticleSystem particles;
 
     private void Start()
@@ -54,12 +54,13 @@ public class RatBehaviour : MonoBehaviour
                 doorLocked++;
         }
         if (blocked && doorLocked == 0) blocked = false;
-        if (blocked)
+        if (blocked && wrench != null)
         {
             wrench.enabled = true;
             return;
         }
-        wrench.enabled = false;
+        if(wrench != null)
+            wrench.enabled = false;
         isInSpot = false;
         targettedSpotId++;
         if(doorLocked > 0)
