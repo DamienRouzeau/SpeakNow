@@ -137,13 +137,11 @@ public class repairCar : MonoBehaviour
         {
             anim.SetTrigger("Final");
             playerAnim.SetBool("Final", true);
-            StartCoroutine(BackToMenu());
         }
     }
 
-    private IEnumerator BackToMenu()
+    public void BackToMenu()
     {
-        yield return new WaitForSeconds(2.8f);
         SceneManager.LoadScene(0);
     }
 

@@ -1364,7 +1364,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &490463464
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4144,32 +4144,32 @@ MonoBehaviour:
     <size=60>Alexis
     Borteyru</size>
 
+    <size=60>Gwenaelle Devriendt</size>
+
+
+    <color=#826DD2>UI
+    Designer</color>
+
     <size=60>Damien Rouzeau</size>
 
 
-    <color=#826DD2>UI Designer</color>
+    <color=#826DD2>Sound
+    Designer</color>
 
-    <size=60>Damien
-    Rouzeau</size>
-
-
-    <color=#826DD2>Sound Designer</color>
-
-    <size=60> Damien
-    Rouzeau </size>
+    <size=60> Damien Rouzeau </size>
 
 
     <color=#826DD2>Remerciements</color>
 
-    <size=60> Axel
-    Tetart </size>
+    <size=60>
+    Axel Tetart </size>
 
     <size=60> Alexis Gelin </size>
 
-    <size=60> Alexandre Montel
-    </size>
+    <size=60> Alexandre
+    Montel </size>
 
-    <size=60> Gwenaelle Devriendt </size>
+    <size=60>   </size>
 
 '
 --- !u!222 &1539730127
