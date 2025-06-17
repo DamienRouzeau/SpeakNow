@@ -40,7 +40,7 @@ public class RiverTrigger : MonoBehaviour
         // Variante 1 : au feeling, via l’énum
         switch (ctrl.GetSize())
         {
-            case size.little:  return immersionDepth * 0.3f;
+            case size.little:  return immersionDepth * 0.12f;
             case size.normal:  return immersionDepth;
             case size.big:     return immersionDepth * 1.4f;
         }
