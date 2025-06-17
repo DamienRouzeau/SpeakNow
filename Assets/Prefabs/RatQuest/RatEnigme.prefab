@@ -235,7 +235,7 @@ MonoBehaviour:
   anchor:
   - {fileID: 7396532732847696450}
   - {fileID: 6531699188276425496}
-  wrench: {fileID: 5752804459352921082}
+  wrench: {fileID: 2607392179940512498}
   particles: {fileID: 6613954762366272691}
 --- !u!195 &532168141123980601
 NavMeshAgent:
@@ -306,9 +306,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4556276457746108, guid: 7c4f694f8a877aa46adee3fb61ec7a64, type: 3}
   m_PrefabInstance: {fileID: 2324314197935900901}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &5752804459352921082 stripped
+--- !u!65 &2607392179940512498 stripped
 BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 8041052201929300767, guid: 7c4f694f8a877aa46adee3fb61ec7a64, type: 3}
+  m_CorrespondingSourceObject: {fileID: 319419317351455255, guid: 7c4f694f8a877aa46adee3fb61ec7a64, type: 3}
   m_PrefabInstance: {fileID: 2324314197935900901}
   m_PrefabAsset: {fileID: 0}
 --- !u!198 &6613954762366272691 stripped
