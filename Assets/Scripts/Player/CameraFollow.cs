@@ -5,27 +5,27 @@ public class CameraFreeLook : MonoBehaviour
     /* ---------- Réglages généraux ---------- */
     [Header("Cible et sensibilité")]
     public Transform player;
-    public float mouseSensitivity = 100f;
+    [Range(0.1f, 10f)] public float mouseSensitivity = 1f;
 
     [Header("Base Camera Settings")]
-    public float baseDistance      = 5f;
-    public float baseMinDistance   = 2f;
-    public float baseCameraHeight  = 3f;
-    public float baseHeadHeight    = 1.5f;
+    public float baseDistance = 5f;
+    public float baseMinDistance = 2f;
+    public float baseCameraHeight = 3f;
+    public float baseHeadHeight = 1.5f;
     [Tooltip("Layers pris en compte pour bloquer la caméra")]
     public LayerMask collisionLayers;
 
     [Header("FOV Dynamique")]
     [SerializeField] private Camera mainCamera;
     public float baseFOV = 60f;
-    public float maxFOV  = 80f;
-    public float minFOV  = 45f;
+    public float maxFOV = 80f;
+    public float minFOV = 45f;
 
     [HideInInspector] public bool cameraFrozen = false;
 
     /* ---------- Limites d’angle ---------- */
     public float minVerticalAngle = -15f;
-    public float maxVerticalAngle =  55f;
+    public float maxVerticalAngle = 55f;
 
     /* ---------- Layer à ignorer totalement ---------- */
     [Header("Layer spécial à ignorer")]
@@ -33,16 +33,16 @@ public class CameraFreeLook : MonoBehaviour
     public string ignoreLayerName = "Notrigger";
 
     /* ---------- Privé ---------- */
-    float rotationX, rotationY;
-    int   ignoreLayer;          // index numérique du layer à ignorer
+    private float rotationX, rotationY;
+    private int ignoreLayer;
 
     /* ---------- Initialisation ---------- */
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
 
-        float savedSens = PlayerPrefs.GetFloat("sensitivity");
-        mouseSensitivity = (savedSens > 0.25f) ? savedSens * 100f : 50f;
+        float savedSens = PlayerPrefs.GetFloat("sensitivity", 1f); // default = 1
+        mouseSensitivity = Mathf.Clamp(savedSens, 0.1f, 10f);
 
         ignoreLayer = LayerMask.NameToLayer(ignoreLayerName);
         if (ignoreLayer == -1)
@@ -57,33 +57,32 @@ public class CameraFreeLook : MonoBehaviour
         /* -- rotation selon la souris -- */
         if (!cameraFrozen)
         {
-            rotationX += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-            rotationY -= Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+            rotationX += Input.GetAxis("Mouse X") * mouseSensitivity;
+            rotationY -= Input.GetAxis("Mouse Y") * mouseSensitivity;
             rotationY = Mathf.Clamp(rotationY, minVerticalAngle, maxVerticalAngle);
         }
 
         /* -- paramètres dynamiques selon l’échelle du joueur -- */
-        Vector3 scale       = player.localScale;
-        float   scaleFactor = scale.y / 0.15f;
+        Vector3 scale = player.localScale;
+        float scaleFactor = scale.y / 0.15f;
 
-        float dynDist   = baseDistance    * scaleFactor;
+        float dynDist = baseDistance * scaleFactor;
         float dynHeight = baseCameraHeight * Mathf.Pow(scaleFactor, 1.15f);
-        float dynMin    = baseMinDistance * scaleFactor;
-        float dynHead   = baseHeadHeight  * scaleFactor;
+        float dynMin = baseMinDistance * scaleFactor;
+        float dynHead = baseHeadHeight * scaleFactor;
 
-        Quaternion rot   = Quaternion.Euler(rotationY, rotationX, 0f);
-        Vector3    offset = rot * new Vector3(0f, dynHeight, -dynDist);
-        Vector3    target = player.position + offset;
+        Quaternion rot = Quaternion.Euler(rotationY, rotationX, 0f);
+        Vector3 offset = rot * new Vector3(0f, dynHeight, -dynDist);
+        Vector3 target = player.position + offset;
 
-        Vector3 rayOrigin    = player.position + Vector3.up * dynHead;
+        Vector3 rayOrigin = player.position + Vector3.up * dynHead;
         Vector3 rayDirection = target - rayOrigin;
 
         int finalMask = collisionLayers;
         if (ignoreLayer != -1)
             finalMask &= ~(1 << ignoreLayer);
 
-        if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, dynDist,
-                            finalMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, dynDist, finalMask, QueryTriggerInteraction.Ignore))
         {
             float adjDist = Mathf.Max(dynMin, hit.distance - 0.2f);
             target = player.position + (hit.point - player.position).normalized * adjDist;
@@ -103,3 +102,4 @@ public class CameraFreeLook : MonoBehaviour
         transform.LookAt(player.position + Vector3.up * dynHead);
     }
 }
+    
